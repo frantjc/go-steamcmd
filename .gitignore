@@ -1,0 +1,9 @@
+# IDE
+.idea/
+.vscode/
+
+# macOS
+.DS_Store
+
+# go
+vendor/
