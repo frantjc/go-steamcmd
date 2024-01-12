@@ -53,11 +53,13 @@ type AppUpdateCombined struct {
 func (c Command) AppUpdate(ctx context.Context, cmdc *AppUpdateCombined) error {
 	args := []string{}
 
-	if a, err := forceInstallDir(cmdc.ForceInstallDir).args(); err != nil {
-		return err
-	} else if len(a) > 0 {
-		a[0] = "+" + a[0]
-		args = append(args, a...)
+	if cmdc.ForceInstallDir != "" {
+		if a, err := forceInstallDir(cmdc.ForceInstallDir).args(); err != nil {
+			return err
+		} else if len(a) > 0 {
+			a[0] = "+" + a[0]
+			args = append(args, a...)
+		}
 	}
 
 	if a, err := cmdc.Login.args(); err != nil {
@@ -67,11 +69,13 @@ func (c Command) AppUpdate(ctx context.Context, cmdc *AppUpdateCombined) error {
 		args = append(args, a...)
 	}
 
-	if a, err := forcePlatformType(cmdc.ForcePlatformType).args(); err != nil {
-		return err
-	} else if len(a) > 0 {
-		a[0] = "+" + a[0]
-		args = append(args, a...)
+	if cmdc.ForcePlatformType != "" {
+		if a, err := forcePlatformType(cmdc.ForcePlatformType).args(); err != nil {
+			return err
+		} else if len(a) > 0 {
+			a[0] = "+" + a[0]
+			args = append(args, a...)
+		}
 	}
 
 	if a, err := cmdc.AppUpdate.args(); err != nil {
