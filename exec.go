@@ -85,6 +85,8 @@ func (c Command) AppUpdate(ctx context.Context, cmdc *AppUpdateCombined) error {
 		args = append(args, a...)
 	}
 
+	args = append(args, "+quit")
+
 	//nolint:gosec
 	return exec.CommandContext(ctx, c.String(), args...).Run()
 }
