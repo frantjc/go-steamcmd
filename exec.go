@@ -42,3 +42,45 @@ func (c Command) Start(ctx context.Context) (Prompt, error) {
 
 	return p, p.Run(ctx)
 }
+
+type AppUpdateCombined struct {
+	ForceInstallDir string
+	*Login
+	ForcePlatformType PlatformType
+	*AppUpdate
+}
+
+func (c Command) AppUpdate(ctx context.Context, cmdc *AppUpdateCombined) error {
+	args := []string{}
+
+	if a, err := forceInstallDir(cmdc.ForceInstallDir).args(); err != nil {
+		return err
+	} else if len(a) > 0 {
+		a[0] = "+" + a[0]
+		args = append(args, a...)
+	}
+
+	if a, err := cmdc.Login.args(); err != nil {
+		return err
+	} else if len(a) > 0 {
+		a[0] = "+" + a[0]
+		args = append(args, a...)
+	}
+
+	if a, err := forcePlatformType(cmdc.ForcePlatformType).args(); err != nil {
+		return err
+	} else if len(a) > 0 {
+		a[0] = "+" + a[0]
+		args = append(args, a...)
+	}
+
+	if a, err := cmdc.AppUpdate.args(); err != nil {
+		return err
+	} else if len(a) > 0 {
+		a[0] = "+" + a[0]
+		args = append(args, a...)
+	}
+
+	//nolint:gosec
+	return exec.CommandContext(ctx, c.String(), args...).Run()
+}
