@@ -29,8 +29,11 @@ $(BIN):
 	@mkdir -p $(BIN)
 
 STEAMCMD = $(BIN)/steamcmd
+STEAMCMD_TGZ_URL = https://steamcdn-a.akamaihd.net/client/installer/steamcmd_osx.tar.gz
 
 .PHONY: $(STEAMCMD)
 steamcmd $(STEAMCMD): $(BIN)
-	curl -sqL "https://steamcdn-a.akamaihd.net/client/installer/steamcmd_osx.tar.gz" | tar -C $(BIN) -zxvf -
+	@test -s $(CONTROLLER_GEN) || \
+		curl -sqL "$(STEAMCMD_TGZ_URL)" \
+			| tar -C $(BIN) -zxvf -
 
