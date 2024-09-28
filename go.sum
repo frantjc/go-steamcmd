@@ -2,5 +2,7 @@ github.com/frantjc/go-encoding-vdf v0.0.0-20240926171725-9dd62bf98f16 h1:XON3kZD
 github.com/frantjc/go-encoding-vdf v0.0.0-20240926171725-9dd62bf98f16/go.mod h1:zY83TMnjTQ2hUDsJINasa1N+ZyxHoIvFGYHZBl2RyN0=
 github.com/frantjc/go-encoding-vdf v0.0.0-20240928213137-08850c94592e h1:c1Jbr7qa2jyp7rH8QzjtB4yrQTAHU8JXKAOByF1soHc=
 github.com/frantjc/go-encoding-vdf v0.0.0-20240928213137-08850c94592e/go.mod h1:zY83TMnjTQ2hUDsJINasa1N+ZyxHoIvFGYHZBl2RyN0=
+github.com/frantjc/go-encoding-vdf v0.0.0-20240928221613-2ef12628042f h1:fy+VU2KF2R4Eqr/m/lDmAv/fwAQIxCL1JEZ7Bu75+cE=
+github.com/frantjc/go-encoding-vdf v0.0.0-20240928221613-2ef12628042f/go.mod h1:zY83TMnjTQ2hUDsJINasa1N+ZyxHoIvFGYHZBl2RyN0=
 github.com/frantjc/x v0.0.0-20231227080902-6c5dc9b6f03f h1:H2WGDYffgZ+aC3KnWaZv94tc4ZdvNmjIhfMuJSBNweU=
 github.com/frantjc/x v0.0.0-20231227080902-6c5dc9b6f03f/go.mod h1:jzQwn2fyR0LRUO37WetnmJkZWmVR2GjhCD1QuaAJSPo=
