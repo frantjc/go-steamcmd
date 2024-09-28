@@ -7,3 +7,7 @@
 
 # go
 vendor/
+
+# steamcmd
+bin/
+Frameworks

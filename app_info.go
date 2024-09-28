@@ -1,46 +1,65 @@
 package steamcmd
 
-// TODO: Needs vdf equivalent of e.g. stdlib's encoding/json.
+type AppInfo struct {
+	Common   *AppInfoCommon          `vdf:"common"`
+	Extended *AppInfoExtended        `vdf:"extended"`
+	Config   *AppInfoConfig          `vdf:"config"`
+	Depots   map[string]AppInfoDepot `vdf:"depots"`
+}
 
-// type AppInfo struct {
-// 	Common   *AppInfoCommon   `vdf:"common,omitempty"`
-// 	Extended *AppInfoExtended `vdf:"extended,omitempty"`
-// 	Config   *AppInfoConfig   `vdf:"config,omitempty"`
-// }
+type AppInfoDepot struct {
+	Config             *AppInfoConfig             `vdf:"config"`
+	Manifests          map[string]AppInfoManifest `vdf:"manifests"`
+	DepotFromApp       string                     `vdf:"depotfromapp"`
+	EncryptedManifests map[string]AppInfoManifest `vdf:"encryptedmanifests"`
+}
 
-// type AppInfoCommon struct {
-// 	Name   string `vdf:"name,omitempty"`
-// 	Type   string `vdf:"type,omitempty"`
-// 	OSList string `vdf:"oslist,omitempty"`
-// 	GameID string `vdf:"gameid,omitempty"`
-// }
+type AppInfoManifest struct {
+	GID      string `vdf:"gid"`
+	Size     string `vdf:"size"`
+	Download string `vdf:"download"`
+}
 
-// type AppInfoExtended struct {
-// 	Developer                 string `vdf:"developer,omitempty"`
-// 	GameDir                   string `vdf:"gamedir,omitempty"`
-// 	Homepage                  string `vdf:"homepage,omitempty"`
-// 	Icon                      string `vdf:"icon,omitempty"`
-// 	NoServers                 string `vdf:"noservers,omitempty"`
-// 	PrimaryCache              string `vdf:"primarycache,omitempty"`
-// 	SourceGame                string `vdf:"sourcegame,omitempty"`
-// 	State                     string `vdf:"state,omitempty"`
-// 	VisibleOnlyWhenInstalled  string `vdf:"visibleonlywheninstalled,omitempty"`
-// 	VisibleOnlyWhenSubscribed string `vdf:"visibleonlywhensubscribed,omitempty"`
-// }
+type AppInfoBranch struct {
+	BuildID     string `vdf:"buildid"`
+	Description string `vdf:"description"`
+	TimeUpdated string `vdf:"timeupdated"`
+	PwdRequired bool   `vdf:"pwdrequired"`
+}
 
-// type AppInfoConfig struct {
-// 	Launch      map[string]AppInfoConfigLaunch `vdf:"launch,omitempty"`
-// 	ContentType string                         `vdf:"contenttype,omitempty"`
-// 	InstallDir  string                         `vdf:"installdir,omitempty"`
-// }
+type AppInfoCommon struct {
+	Name   string `vdf:"name"`
+	Type   string `vdf:"type"`
+	OSList string `vdf:"oslist"`
+	GameID string `vdf:"gameid"`
+}
 
-// type AppInfoConfigLaunch struct {
-// 	Executable string                     `vdf:"executable,omitempty"`
-// 	Arguments  string                     `vdf:"arguments,omitempty"`
-// 	Config     *AppInfoConfigLaunchConfig `vdf:"config,omitempty"`
-// }
+type AppInfoExtended struct {
+	Developer                 string `vdf:"developer"`
+	GameDir                   string `vdf:"gamedir"`
+	Homepage                  string `vdf:"homepage"`
+	Icon                      string `vdf:"icon"`
+	NoServers                 string `vdf:"noservers"`
+	PrimaryCache              string `vdf:"primarycache"`
+	SourceGame                string `vdf:"sourcegame"`
+	State                     string `vdf:"state"`
+	VisibleOnlyWhenInstalled  string `vdf:"visibleonlywheninstalled"`
+	VisibleOnlyWhenSubscribed string `vdf:"visibleonlywhensubscribed"`
+}
 
-// type AppInfoConfigLaunchConfig struct {
-// 	OSList string `vdf:"oslist"`
-// 	OSArch string `vdf:"osarch"`
-// }
+type AppInfoConfig struct {
+	Launch      map[string]AppInfoConfigLaunch `vdf:"launch"`
+	ContentType string                         `vdf:"contenttype"`
+	InstallDir  string                         `vdf:"installdir"`
+}
+
+type AppInfoConfigLaunch struct {
+	Executable string                     `vdf:"executable"`
+	Arguments  string                     `vdf:"arguments"`
+	Config     *AppInfoConfigLaunchConfig `vdf:"config"`
+}
+
+type AppInfoConfigLaunchConfig struct {
+	OSList string `vdf:"oslist"`
+	OSArch string `vdf:"osarch"`
+}

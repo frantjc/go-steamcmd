@@ -28,6 +28,8 @@ type Prompt interface {
 	Login(context.Context, *Login) error
 	ForcePlatformType(context.Context, PlatformType) error
 	AppUpdate(context.Context, *AppUpdate) error
+	AppInfoPrint(context.Context, AppInfoPrint) (*AppInfo, error)
+	AppInfoRequest(context.Context, AppInfoRequest) error
 	Quit() error
 }
 
@@ -48,6 +50,28 @@ func (p *prompt) Login(ctx context.Context, cmd *Login) error {
 }
 
 func (p *prompt) AppUpdate(ctx context.Context, cmd *AppUpdate) error {
+	return errors.Join(p.err, p.run(ctx, cmd))
+}
+
+func (p *prompt) AppInfoPrint(ctx context.Context, cmd AppInfoPrint) (*AppInfo, error) {
+	if appInfo, ok := appInfos[cmd.String()]; ok {
+		return &appInfo, nil
+	}
+
+	if err := errors.Join(p.err, p.run(ctx, cmd)); err != nil {
+		return nil, err
+	}
+
+	appInfo := appInfos[cmd.String()]
+
+	return &appInfo, nil
+}
+
+func (p *prompt) AppInfoRequest(ctx context.Context, cmd AppInfoRequest) error {
+	if _, ok := appInfos[cmd.String()]; ok {
+		return nil
+	}
+
 	return errors.Join(p.err, p.run(ctx, cmd))
 }
 
