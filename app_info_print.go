@@ -5,6 +5,7 @@ import (
 	"context"
 	"fmt"
 	"io"
+	"strings"
 
 	vdf "github.com/frantjc/go-encoding-vdf"
 )
@@ -56,11 +57,11 @@ func (c AppInfoPrint) readOutput(ctx context.Context, r io.Reader) error {
 			p := buf.Bytes()
 			if _, msgB, found := bytes.Cut(p, errB); found {
 				msgB, _, _ = bytes.Cut(msgB, []byte("\n"))
-				errC <- fmt.Errorf(string(msgB))
+				errC <- fmt.Errorf("%s", strings.ToLower(string(msgB)))
 				return
 			} else if _, msgB, found := bytes.Cut(p, failedB); found {
 				msgB, _, _ = bytes.Cut(msgB, []byte("\n"))
-				errC <- fmt.Errorf(string(msgB))
+				errC <- fmt.Errorf("%s", strings.ToLower(string(msgB)))
 				return
 			} else if i := bytes.Index(p, []byte("{")); i >= 0 {
 				appInfo := &AppInfo{}

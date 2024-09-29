@@ -5,6 +5,7 @@ import (
 	"context"
 	"fmt"
 	"io"
+	"strings"
 )
 
 var base = &anyCommand{
@@ -43,11 +44,11 @@ var base = &anyCommand{
 				p := buf.Bytes()
 				if _, msgB, found := bytes.Cut(p, errB); found {
 					msgB, _, _ = bytes.Cut(msgB, []byte("\n"))
-					errC <- fmt.Errorf(string(msgB))
+					errC <- fmt.Errorf("%s", strings.ToLower(string(msgB)))
 					return
 				} else if _, msgB, found := bytes.Cut(p, failedB); found {
 					msgB, _, _ = bytes.Cut(msgB, []byte("\n"))
-					errC <- fmt.Errorf(string(msgB))
+					errC <- fmt.Errorf("%s", strings.ToLower(string(msgB)))
 					return
 				} else if bytes.Contains(p, successB) || bytes.Contains(p, promptB) {
 					return

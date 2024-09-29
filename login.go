@@ -77,7 +77,7 @@ func (c *Login) readOutput(ctx context.Context, r io.Reader) error {
 			p := buf.Bytes()
 			if _, msgB, found := bytes.Cut(p, errB); found {
 				msgB, _, _ = bytes.Cut(msgB, []byte("\n"))
-				errC <- fmt.Errorf(strings.ToLower(string(msgB)))
+				errC <- fmt.Errorf("%s", strings.ToLower(string(msgB)))
 				return
 			} else if bytes.Contains(p, successB) {
 				return
