@@ -1,6 +1,6 @@
 module github.com/frantjc/go-steamcmd
 
-go 1.21.4
+go 1.22
 
 require (
 	github.com/frantjc/go-encoding-vdf v0.0.0-20240928221613-2ef12628042f

@@ -12,7 +12,7 @@ var quit = &anyCommand{
 	argsFn: func() ([]string, error) {
 		return []string{"quit"}, nil
 	},
-	readOutputFn: func(ctx context.Context, r io.Reader) error {
+	readOutputFn: func(_ context.Context, _ io.Reader) error {
 		return nil
 	},
 	modifyFn: func(_ *promptFlags) error {

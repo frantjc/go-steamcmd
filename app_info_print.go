@@ -15,11 +15,9 @@ func (c AppInfoPrint) String() string {
 	return string(c)
 }
 
-var (
-	appInfos = map[string]AppInfo{}
-)
+var appInfos = map[string]AppInfo{}
 
-func (c AppInfoPrint) check(flags *promptFlags) error {
+func (c AppInfoPrint) check(_ *promptFlags) error {
 	return nil
 }
 
@@ -91,6 +89,6 @@ func (c AppInfoPrint) readOutput(ctx context.Context, r io.Reader) error {
 	}
 }
 
-func (c AppInfoPrint) modify(flags *promptFlags) error {
+func (c AppInfoPrint) modify(_ *promptFlags) error {
 	return nil
 }
