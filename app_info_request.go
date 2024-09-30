@@ -6,10 +6,10 @@ import (
 	"io"
 )
 
-type AppInfoRequest string
+type AppInfoRequest int
 
 func (c AppInfoRequest) String() string {
-	return string(c)
+	return fmt.Sprintf("%d", c)
 }
 
 func (c AppInfoRequest) check(_ *promptFlags) error {
@@ -17,7 +17,7 @@ func (c AppInfoRequest) check(_ *promptFlags) error {
 }
 
 func (c AppInfoRequest) args() ([]string, error) {
-	if c == "" {
+	if c == 0 {
 		return nil, fmt.Errorf("app_info_request requires app ID")
 	}
 

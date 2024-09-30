@@ -10,10 +10,10 @@ import (
 	vdf "github.com/frantjc/go-encoding-vdf"
 )
 
-type AppInfoPrint string
+type AppInfoPrint int
 
 func (c AppInfoPrint) String() string {
-	return string(c)
+	return fmt.Sprintf("%d", c)
 }
 
 var appInfos = map[string]AppInfo{}
@@ -23,7 +23,7 @@ func (c AppInfoPrint) check(_ *promptFlags) error {
 }
 
 func (c AppInfoPrint) args() ([]string, error) {
-	if c == "" {
+	if c == 0 {
 		return nil, fmt.Errorf("app_info_print requires app ID")
 	}
 
