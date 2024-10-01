@@ -8,6 +8,8 @@ import (
 
 type forcePlatformType PlatformType
 
+var _ Cmd = forcePlatformType("")
+
 func (c forcePlatformType) String() string {
 	return string(c)
 }

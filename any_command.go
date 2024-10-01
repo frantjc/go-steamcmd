@@ -12,7 +12,7 @@ type anyCommand struct {
 	modifyFn     func(flags *promptFlags) error
 }
 
-var _ command = &anyCommand{}
+var _ Cmd = &anyCommand{}
 
 func (c *anyCommand) check(flags *promptFlags) error {
 	return c.checkFn(flags)

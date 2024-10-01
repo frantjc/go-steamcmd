@@ -10,6 +10,8 @@ import (
 
 type forceInstallDir string
 
+var _ Cmd = forceInstallDir("")
+
 func (c forceInstallDir) String() string {
 	return string(c)
 }

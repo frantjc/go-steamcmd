@@ -5,7 +5,7 @@ import (
 	"io"
 )
 
-type command interface {
+type Cmd interface {
 	check(*promptFlags) error
 	args() ([]string, error)
 	readOutput(context.Context, io.Reader) error

@@ -13,6 +13,8 @@ type AppUpdate struct {
 	Validate     bool
 }
 
+var _ Cmd = new(AppUpdate)
+
 func (*AppUpdate) check(flags *promptFlags) error {
 	if !flags.loggedIn {
 		return fmt.Errorf("cannot app_update before login")

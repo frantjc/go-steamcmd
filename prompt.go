@@ -79,7 +79,7 @@ func (p *prompt) Quit() error {
 	return errors.Join(p.err, p.run(context.TODO(), quit))
 }
 
-func (p *prompt) run(ctx context.Context, cmd command) error {
+func (p *prompt) run(ctx context.Context, cmd Cmd) error {
 	if err := cmd.check(p.flags); err != nil {
 		return err
 	}

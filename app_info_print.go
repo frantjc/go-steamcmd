@@ -12,6 +12,8 @@ import (
 
 type AppInfoPrint int
 
+var _ Cmd = AppInfoPrint(0)
+
 func (c AppInfoPrint) String() string {
 	return fmt.Sprintf("%d", c)
 }

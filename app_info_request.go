@@ -8,6 +8,8 @@ import (
 
 type AppInfoRequest int
 
+var _ Cmd = AppInfoRequest(0)
+
 func (c AppInfoRequest) String() string {
 	return fmt.Sprintf("%d", c)
 }
