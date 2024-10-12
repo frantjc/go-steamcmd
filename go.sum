@@ -1,3 +1,6 @@
+github.com/adrg/xdg v0.5.0 h1:dDaZvhMXatArP1NPHhnfaQUqWBLBsmx1h1HXQdMoFCY=
+github.com/adrg/xdg v0.5.0/go.mod h1:dDdY4M4DF9Rjy4kHPeNL+ilVF+p2lK8IdM9/rTSGcI4=
+github.com/cpuguy83/go-md2man/v2 v2.0.4/go.mod h1:tgQtvFlXSQOSOSIRvRPT7W67SCa46tRHOmNcaadrF8o=
 github.com/frantjc/go-encoding-vdf v0.0.0-20240926171725-9dd62bf98f16 h1:XON3kZDOprqxYw2ppK2pLq69NXeaYXW3s8ZuJohAwQk=
 github.com/frantjc/go-encoding-vdf v0.0.0-20240926171725-9dd62bf98f16/go.mod h1:zY83TMnjTQ2hUDsJINasa1N+ZyxHoIvFGYHZBl2RyN0=
 github.com/frantjc/go-encoding-vdf v0.0.0-20240928213137-08850c94592e h1:c1Jbr7qa2jyp7rH8QzjtB4yrQTAHU8JXKAOByF1soHc=
@@ -6,3 +9,16 @@ github.com/frantjc/go-encoding-vdf v0.0.0-20240928221613-2ef12628042f h1:fy+VU2K
 github.com/frantjc/go-encoding-vdf v0.0.0-20240928221613-2ef12628042f/go.mod h1:zY83TMnjTQ2hUDsJINasa1N+ZyxHoIvFGYHZBl2RyN0=
 github.com/frantjc/x v0.0.0-20231227080902-6c5dc9b6f03f h1:H2WGDYffgZ+aC3KnWaZv94tc4ZdvNmjIhfMuJSBNweU=
 github.com/frantjc/x v0.0.0-20231227080902-6c5dc9b6f03f/go.mod h1:jzQwn2fyR0LRUO37WetnmJkZWmVR2GjhCD1QuaAJSPo=
+github.com/frantjc/x v0.0.0-20241010033043-38bd7597ce02 h1:av0aprF2EQpEnclqKF5i9i2NVBs/RMa2y5rwnkHoEt4=
+github.com/frantjc/x v0.0.0-20241010033043-38bd7597ce02/go.mod h1:jzQwn2fyR0LRUO37WetnmJkZWmVR2GjhCD1QuaAJSPo=
+github.com/inconshreveable/mousetrap v1.1.0 h1:wN+x4NVGpMsO7ErUn/mUI3vEoE6Jt13X2s0bqwp9tc8=
+github.com/inconshreveable/mousetrap v1.1.0/go.mod h1:vpF70FUmC8bwa3OWnCshd2FqLfsEA9PFc4w1p2J65bw=
+github.com/russross/blackfriday/v2 v2.1.0/go.mod h1:+Rmxgy9KzJVeS9/2gXHxylqXiyQDYRxCVz55jmeOWTM=
+github.com/spf13/cobra v1.8.1 h1:e5/vxKd/rZsfSJMUX1agtjeTDf+qv1/JdBF8gg5k9ZM=
+github.com/spf13/cobra v1.8.1/go.mod h1:wHxEcudfqmLYa8iTfL+OuZPbBZkmvliBWKIezN3kD9Y=
+github.com/spf13/pflag v1.0.5 h1:iy+VFUOCP1a+8yFto/drg2CJ5u0yRoB7fZw3DKv/JXA=
+github.com/spf13/pflag v1.0.5/go.mod h1:McXfInJRrz4CZXVZOBLb0bTZqETkiAhM9Iw0y3An2Bg=
+golang.org/x/sys v0.22.0 h1:RI27ohtqKCnwULzJLqkv897zojh5/DwS/ENaMzUOaWI=
+golang.org/x/sys v0.22.0/go.mod h1:/VUhepiaJMQUp4+oa/7Zr1D23ma6VTLIYjOOTFZPUcA=
+gopkg.in/check.v1 v0.0.0-20161208181325-20d25e280405/go.mod h1:Co6ibVJAznAaIkqp8huTwlJQCZ016jof/cbN4VW5Yz0=
+gopkg.in/yaml.v3 v3.0.1/go.mod h1:K4uyk7z7BCEPqu6E+C64Yfv1cQ7kz7rIZviUmN+EgEM=
