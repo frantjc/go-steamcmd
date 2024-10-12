@@ -38,11 +38,11 @@ func (p *prompt) Run(ctx context.Context) error {
 }
 
 func (p *prompt) ForceInstallDir(ctx context.Context, dir string) error {
-	return errors.Join(p.err, p.run(ctx, forceInstallDir(dir)))
+	return errors.Join(p.err, p.run(ctx, ForceInstallDir(dir)))
 }
 
 func (p *prompt) ForcePlatformType(ctx context.Context, platformType PlatformType) error {
-	return errors.Join(p.err, p.run(ctx, forcePlatformType(platformType)))
+	return errors.Join(p.err, p.run(ctx, ForcePlatformType(platformType)))
 }
 
 func (p *prompt) Login(ctx context.Context, cmd *Login) error {
@@ -76,7 +76,7 @@ func (p *prompt) AppInfoRequest(ctx context.Context, cmd AppInfoRequest) error {
 }
 
 func (p *prompt) Quit() error {
-	return errors.Join(p.err, p.run(context.TODO(), quit))
+	return errors.Join(p.err, p.run(context.TODO(), Quit))
 }
 
 func (p *prompt) run(ctx context.Context, cmd Cmd) error {

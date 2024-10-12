@@ -8,15 +8,15 @@ import (
 	"path/filepath"
 )
 
-type forceInstallDir string
+type ForceInstallDir string
 
-var _ Cmd = forceInstallDir("")
+var _ Cmd = ForceInstallDir("")
 
-func (c forceInstallDir) String() string {
+func (c ForceInstallDir) String() string {
 	return string(c)
 }
 
-func (forceInstallDir) check(flags *promptFlags) error {
+func (ForceInstallDir) check(flags *promptFlags) error {
 	if flags.loggedIn {
 		return fmt.Errorf("cannot force_install_dir after login")
 	}
@@ -24,7 +24,7 @@ func (forceInstallDir) check(flags *promptFlags) error {
 	return nil
 }
 
-func (c forceInstallDir) args() ([]string, error) {
+func (c ForceInstallDir) args() ([]string, error) {
 	if c == "" {
 		return nil, fmt.Errorf("empty force_install_dir")
 	}
@@ -41,10 +41,10 @@ func (c forceInstallDir) args() ([]string, error) {
 	return []string{"force_install_dir", a}, nil
 }
 
-func (c forceInstallDir) readOutput(ctx context.Context, r io.Reader) error {
+func (c ForceInstallDir) readOutput(ctx context.Context, r io.Reader) error {
 	return base.readOutput(ctx, r)
 }
 
-func (c forceInstallDir) modify(_ *promptFlags) error {
+func (c ForceInstallDir) modify(_ *promptFlags) error {
 	return nil
 }

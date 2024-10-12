@@ -7,7 +7,7 @@ import (
 )
 
 type AppUpdate struct {
-	AppID        string
+	AppID        int
 	Beta         string
 	BetaPassword string
 	Validate     bool
@@ -24,11 +24,11 @@ func (*AppUpdate) check(flags *promptFlags) error {
 }
 
 func (c *AppUpdate) args() ([]string, error) {
-	if c == nil || c.AppID == "" {
+	if c == nil || c.AppID == 0 {
 		return nil, fmt.Errorf("app_update requires app ID")
 	}
 
-	args := []string{"app_update", c.AppID}
+	args := []string{"app_update", fmt.Sprint(c.AppID)}
 
 	if c.Beta != "" {
 		args = append(args, "-beta", c.Beta)

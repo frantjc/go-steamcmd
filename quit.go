@@ -5,7 +5,7 @@ import (
 	"io"
 )
 
-var quit = &anyCommand{
+var Quit = &anyCommand{
 	checkFn: func(_ *promptFlags) error {
 		return nil
 	},
