@@ -57,9 +57,5 @@ func (c Command) Run(ctx context.Context, cmds ...Cmd) error {
 	}
 
 	//nolint:gosec
-	cmd := exec.CommandContext(ctx, c.String(), args...)
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-
-	return cmd.Run()
+	return exec.CommandContext(ctx, c.String(), args...).Run()
 }
