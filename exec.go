@@ -3,6 +3,7 @@ package steamcmd
 import (
 	"context"
 	"fmt"
+	"os"
 	"os/exec"
 	"sync"
 )
@@ -56,5 +57,9 @@ func (c Command) Run(ctx context.Context, cmds ...Cmd) error {
 	}
 
 	//nolint:gosec
-	return exec.CommandContext(ctx, c.String(), args...).Run()
+	cmd := exec.CommandContext(ctx, c.String(), args...)
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+
+	return cmd.Run()
 }
