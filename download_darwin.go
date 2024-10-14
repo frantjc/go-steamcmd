@@ -26,9 +26,7 @@ var DownloadURL = func() *url.URL {
 }()
 
 func New(ctx context.Context) (Command, error) {
-	var (
-		entrypoint = "steamcmd.sh"
-	)
+	entrypoint := "steamcmd.sh"
 	if bash, err := exec.LookPath("bash"); err != nil || bash == "" {
 		entrypoint = "steamcmd"
 	}

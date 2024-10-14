@@ -3,7 +3,6 @@ package steamcmd
 import (
 	"context"
 	"fmt"
-	"os"
 	"os/exec"
 	"sync"
 )
