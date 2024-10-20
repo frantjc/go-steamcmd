@@ -6,16 +6,16 @@ import (
 	"io"
 )
 
-type AppUpdate struct {
+type appUpdate struct {
 	AppID        int
 	Beta         string
 	BetaPassword string
 	Validate     bool
 }
 
-var _ Cmd = new(AppUpdate)
+var _ cmd = new(appUpdate)
 
-func (*AppUpdate) check(flags *promptFlags) error {
+func (*appUpdate) check(flags *promptFlags) error {
 	if !flags.loggedIn {
 		return fmt.Errorf("cannot app_update before login")
 	}
@@ -23,7 +23,7 @@ func (*AppUpdate) check(flags *promptFlags) error {
 	return nil
 }
 
-func (c *AppUpdate) args() ([]string, error) {
+func (c *appUpdate) args() ([]string, error) {
 	if c == nil || c.AppID == 0 {
 		return nil, fmt.Errorf("app_update requires app ID")
 	}
@@ -45,10 +45,10 @@ func (c *AppUpdate) args() ([]string, error) {
 	return args, nil
 }
 
-func (c *AppUpdate) readOutput(ctx context.Context, r io.Reader) error {
+func (c *appUpdate) readOutput(ctx context.Context, r io.Reader) error {
 	return base.readOutput(ctx, r)
 }
 
-func (c *AppUpdate) modify(_ *promptFlags) error {
+func (c *appUpdate) modify(_ *promptFlags) error {
 	return nil
 }

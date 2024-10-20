@@ -40,21 +40,5 @@ func (c Command) Start(ctx context.Context) (Prompt, error) {
 		}
 	}()
 
-	return p, p.Run(ctx)
-}
-
-func (c Command) Run(ctx context.Context, cmds ...Cmd) error {
-	args := []string{}
-
-	for _, cmd := range append(cmds, Quit) {
-		if a, err := cmd.args(); err != nil {
-			return err
-		} else if len(a) > 0 {
-			a[0] = "+" + a[0]
-			args = append(args, a...)
-		}
-	}
-
-	//nolint:gosec
-	return exec.CommandContext(ctx, c.String(), args...).Run()
+	return p, p.run(ctx, base)
 }

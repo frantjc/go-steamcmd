@@ -10,21 +10,21 @@ import (
 	vdf "github.com/frantjc/go-encoding-vdf"
 )
 
-type AppInfoPrint int
+type appInfoPrint int
 
-var _ Cmd = AppInfoPrint(0)
+var _ cmd = appInfoPrint(0)
 
-func (c AppInfoPrint) String() string {
+func (c appInfoPrint) String() string {
 	return fmt.Sprintf("%d", c)
 }
 
 var appInfos = map[int]AppInfo{}
 
-func (c AppInfoPrint) check(_ *promptFlags) error {
+func (c appInfoPrint) check(_ *promptFlags) error {
 	return nil
 }
 
-func (c AppInfoPrint) args() ([]string, error) {
+func (c appInfoPrint) args() ([]string, error) {
 	if c == 0 {
 		return nil, fmt.Errorf("app_info_print requires app ID")
 	}
@@ -32,7 +32,7 @@ func (c AppInfoPrint) args() ([]string, error) {
 	return []string{"app_info_print", c.String()}, nil
 }
 
-func (c AppInfoPrint) readOutput(ctx context.Context, r io.Reader) error {
+func (c appInfoPrint) readOutput(ctx context.Context, r io.Reader) error {
 	var (
 		errC    = make(chan error, 1)
 		buf     = new(bytes.Buffer)
@@ -92,6 +92,6 @@ func (c AppInfoPrint) readOutput(ctx context.Context, r io.Reader) error {
 	}
 }
 
-func (c AppInfoPrint) modify(_ *promptFlags) error {
+func (c appInfoPrint) modify(_ *promptFlags) error {
 	return nil
 }

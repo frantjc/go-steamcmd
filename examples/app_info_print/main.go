@@ -20,21 +20,21 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	defer prompt.Quit()
+	defer prompt.Quit(ctx)
 
-	if err = prompt.Login(ctx, &steamcmd.Login{}); err != nil {
+	if err = prompt.Login(ctx); err != nil {
 		panic(err)
 	}
 
 	// `steamcmd` tries to do this automatically during app_info_print,
 	// but it often just hangs.
-	if err = prompt.AppInfoRequest(ctx, steamcmd.AppInfoRequest(appID)); err != nil {
+	if err = prompt.AppInfoRequest(ctx, appID); err != nil {
 		panic(err)
 	}
 
 	time.Sleep(time.Second * 9)
 
-	appInfo, err := prompt.AppInfoPrint(ctx, steamcmd.AppInfoPrint(appID))
+	appInfo, err := prompt.AppInfoPrint(ctx, appID)
 	if err != nil {
 		panic(err)
 	}

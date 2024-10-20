@@ -31,7 +31,7 @@ func New(ctx context.Context) (Command, error) {
 		entrypoint = "steamcmd"
 	}
 
-	if bin, err := exec.LookPath(entrypoint); !errors.Is(err, exec.ErrDot) && err == nil {
+	if bin, err := exec.LookPath(entrypoint); errors.Is(err, exec.ErrDot) || err == nil {
 		return Command(bin), nil
 	} else if fi, err := os.Stat(filepath.Join(internal.Cache, entrypoint)); err != nil || fi.IsDir() {
 		rc, err := Download(ctx)

@@ -6,19 +6,19 @@ import (
 	"io"
 )
 
-type AppInfoRequest int
+type appInfoRequest int
 
-var _ Cmd = AppInfoRequest(0)
+var _ cmd = appInfoRequest(0)
 
-func (c AppInfoRequest) String() string {
+func (c appInfoRequest) String() string {
 	return fmt.Sprintf("%d", c)
 }
 
-func (c AppInfoRequest) check(_ *promptFlags) error {
+func (c appInfoRequest) check(_ *promptFlags) error {
 	return nil
 }
 
-func (c AppInfoRequest) args() ([]string, error) {
+func (c appInfoRequest) args() ([]string, error) {
 	if c == 0 {
 		return nil, fmt.Errorf("app_info_request requires app ID")
 	}
@@ -26,10 +26,10 @@ func (c AppInfoRequest) args() ([]string, error) {
 	return []string{"app_info_request", c.String()}, nil
 }
 
-func (c AppInfoRequest) readOutput(ctx context.Context, r io.Reader) error {
+func (c appInfoRequest) readOutput(ctx context.Context, r io.Reader) error {
 	return base.readOutput(ctx, r)
 }
 
-func (c AppInfoRequest) modify(_ *promptFlags) error {
+func (c appInfoRequest) modify(_ *promptFlags) error {
 	return nil
 }

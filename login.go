@@ -10,17 +10,17 @@ import (
 	"time"
 )
 
-type Login struct {
+type login struct {
 	Username       string
 	Password       string
 	SteamGuardCode string
 }
 
-func (c *Login) check(_ *promptFlags) error {
+func (c *login) check(_ *promptFlags) error {
 	return nil
 }
 
-func (c *Login) args() ([]string, error) {
+func (c *login) args() ([]string, error) {
 	if c == nil || c.Username == "" || c.Username == "anonymous" {
 		return []string{"login", "anonymous"}, nil
 	}
@@ -40,7 +40,7 @@ func (c *Login) args() ([]string, error) {
 	return args, nil
 }
 
-func (c *Login) readOutput(ctx context.Context, r io.Reader) error {
+func (c *login) readOutput(ctx context.Context, r io.Reader) error {
 	var (
 		errC      = make(chan error, 1)
 		buf       = new(bytes.Buffer)
@@ -99,7 +99,7 @@ func (c *Login) readOutput(ctx context.Context, r io.Reader) error {
 	}
 }
 
-func (*Login) modify(flags *promptFlags) error {
+func (*login) modify(flags *promptFlags) error {
 	if flags == nil {
 		flags = &promptFlags{}
 	}

@@ -16,15 +16,20 @@ func main() {
 		tmp   = filepath.Join(internal.Cache, fmt.Sprint(appID))
 	)
 
-	fmt.Println(tmp)
+	prompt, err := steamcmd.Start(ctx)
+	if err != nil {
+		panic(err)
+	}
 
-	if err := steamcmd.Run(ctx,
-		steamcmd.ForceInstallDir(tmp),
-		&steamcmd.Login{},
-		&steamcmd.AppUpdate{
-			AppID: appID,
-		},
-	); err != nil {
+	if err := prompt.ForceInstallDir(ctx, tmp); err != nil {
+		panic(err)
+	}
+
+	if err := prompt.Login(ctx); err != nil {
+		panic(err)
+	}
+
+	if err := prompt.AppUpdate(ctx, appID); err != nil {
 		panic(err)
 	}
 }
