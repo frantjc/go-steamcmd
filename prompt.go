@@ -54,7 +54,7 @@ func (p *prompt) AppUpdate(ctx context.Context, cmd *AppUpdate) error {
 }
 
 func (p *prompt) AppInfoPrint(ctx context.Context, cmd AppInfoPrint) (*AppInfo, error) {
-	if appInfo, ok := appInfos[cmd.String()]; ok {
+	if appInfo, ok := appInfos[int(cmd)]; ok {
 		return &appInfo, nil
 	}
 
@@ -62,13 +62,13 @@ func (p *prompt) AppInfoPrint(ctx context.Context, cmd AppInfoPrint) (*AppInfo, 
 		return nil, err
 	}
 
-	appInfo := appInfos[cmd.String()]
+	appInfo := appInfos[int(cmd)]
 
 	return &appInfo, nil
 }
 
 func (p *prompt) AppInfoRequest(ctx context.Context, cmd AppInfoRequest) error {
-	if _, ok := appInfos[cmd.String()]; ok {
+	if _, ok := appInfos[int(cmd)]; ok {
 		return nil
 	}
 

@@ -18,7 +18,7 @@ func (c AppInfoPrint) String() string {
 	return fmt.Sprintf("%d", c)
 }
 
-var appInfos = map[string]AppInfo{}
+var appInfos = map[int]AppInfo{}
 
 func (c AppInfoPrint) check(_ *promptFlags) error {
 	return nil
@@ -78,7 +78,7 @@ func (c AppInfoPrint) readOutput(ctx context.Context, r io.Reader) error {
 					return
 				}
 
-				appInfos[c.String()] = *appInfo
+				appInfos[int(c)] = *appInfo
 				return
 			}
 		}
