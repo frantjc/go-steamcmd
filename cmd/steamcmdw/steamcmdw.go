@@ -7,14 +7,13 @@ import (
 
 	"github.com/frantjc/go-steamcmd"
 	"github.com/frantjc/go-steamcmd/internal"
-
 	"github.com/spf13/cobra"
 )
 
 func NewEntrypoint() *cobra.Command {
 	var (
-		download, clean bool
-		cmd             = &cobra.Command{
+		clean bool
+		cmd   = &cobra.Command{
 			Use:           "steamcmd",
 			SilenceErrors: true,
 			SilenceUsage:  true,
@@ -41,7 +40,6 @@ func NewEntrypoint() *cobra.Command {
 
 	cmd.SetVersionTemplate("{{ .Name }}{{ .Version }} " + runtime.Version() + "\n")
 	cmd.PersistentFlags().BoolVar(&clean, "clean", false, "delete steamcmd download and exit")
-	cmd.PersistentFlags().BoolVar(&download, "download", false, "force redownload of steamcmd")
 
 	return cmd
 }

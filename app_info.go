@@ -1,29 +1,19 @@
 package steamcmd
 
 type AppInfo struct {
-	Common   *AppInfoCommon          `vdf:"common"`
-	Extended *AppInfoExtended        `vdf:"extended"`
-	Config   *AppInfoConfig          `vdf:"config"`
-	Depots   map[string]AppInfoDepot `vdf:"depots"`
+	Common *AppInfoCommon `vdf:"common"`
+	Config *AppInfoConfig `vdf:"config"`
+	Depots AppInfoDepots  `vdf:"depots"`
 }
 
-type AppInfoDepot struct {
-	Config             *AppInfoConfig             `vdf:"config"`
-	Manifests          map[string]AppInfoManifest `vdf:"manifests"`
-	DepotFromApp       string                     `vdf:"depotfromapp"`
-	EncryptedManifests map[string]AppInfoManifest `vdf:"encryptedmanifests"`
+type AppInfoDepots struct {
+	Branches map[string]AppInfoDepotsBranch `vdf:"branches"`
 }
 
-type AppInfoManifest struct {
-	GID      string `vdf:"gid"`
-	Size     string `vdf:"size"`
-	Download string `vdf:"download"`
-}
-
-type AppInfoBranch struct {
-	BuildID     string `vdf:"buildid"`
+type AppInfoDepotsBranch struct {
+	BuildID     int    `vdf:"buildid"`
 	Description string `vdf:"description"`
-	TimeUpdated string `vdf:"timeupdated"`
+	TimeUpdated int    `vdf:"timeupdated"`
 	PwdRequired bool   `vdf:"pwdrequired"`
 }
 
@@ -31,20 +21,7 @@ type AppInfoCommon struct {
 	Name   string `vdf:"name"`
 	Type   string `vdf:"type"`
 	OSList string `vdf:"oslist"`
-	GameID string `vdf:"gameid"`
-}
-
-type AppInfoExtended struct {
-	Developer                 string `vdf:"developer"`
-	GameDir                   string `vdf:"gamedir"`
-	Homepage                  string `vdf:"homepage"`
-	Icon                      string `vdf:"icon"`
-	NoServers                 string `vdf:"noservers"`
-	PrimaryCache              string `vdf:"primarycache"`
-	SourceGame                string `vdf:"sourcegame"`
-	State                     string `vdf:"state"`
-	VisibleOnlyWhenInstalled  string `vdf:"visibleonlywheninstalled"`
-	VisibleOnlyWhenSubscribed string `vdf:"visibleonlywhensubscribed"`
+	GameID int    `vdf:"gameid"`
 }
 
 type AppInfoConfig struct {
@@ -56,6 +33,7 @@ type AppInfoConfig struct {
 type AppInfoConfigLaunch struct {
 	Executable string                     `vdf:"executable"`
 	Arguments  string                     `vdf:"arguments"`
+	Type       string                     `vdf:"type"`
 	Config     *AppInfoConfigLaunchConfig `vdf:"config"`
 }
 

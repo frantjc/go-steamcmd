@@ -7,3 +7,7 @@
 ```sh
 go get github.com/frantjc/go-steamcmd
 ```
+
+## use
+
+See [examples](examples/).
