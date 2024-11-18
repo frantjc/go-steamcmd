@@ -16,7 +16,11 @@ func (c appInfoPrint) String() string {
 
 var appInfos = map[int]AppInfo{}
 
-func (c appInfoPrint) Check(_ *promptFlags) error {
+func (c appInfoPrint) Check(flags *promptFlags) error {
+	if !flags.loggedIn {
+		return fmt.Errorf("cannot app_info_print before login")
+	}
+
 	return nil
 }
 

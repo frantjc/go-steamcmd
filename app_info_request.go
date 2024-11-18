@@ -14,7 +14,11 @@ func (c appInfoRequest) String() string {
 	return fmt.Sprintf("%d", c)
 }
 
-func (c appInfoRequest) Check(_ *promptFlags) error {
+func (c appInfoRequest) Check(flags *promptFlags) error {
+	if !flags.loggedIn {
+		return fmt.Errorf("cannot app_info_request before login")
+	}
+
 	return nil
 }
 
