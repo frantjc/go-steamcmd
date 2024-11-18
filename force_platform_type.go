@@ -14,11 +14,11 @@ func (c forcePlatformType) String() string {
 	return string(c)
 }
 
-func (c forcePlatformType) check(_ *promptFlags) error {
+func (c forcePlatformType) Check(_ *promptFlags) error {
 	return nil
 }
 
-func (c forcePlatformType) args() ([]string, error) {
+func (c forcePlatformType) Args() ([]string, error) {
 	if c == "" {
 		return nil, fmt.Errorf("empty PlatformType")
 	}
@@ -26,10 +26,10 @@ func (c forcePlatformType) args() ([]string, error) {
 	return []string{"@sSteamCmdForcePlatformType", c.String()}, nil
 }
 
-func (c forcePlatformType) readOutput(ctx context.Context, r io.Reader) error {
-	return base.readOutput(ctx, r)
+func (c forcePlatformType) ReadOutput(ctx context.Context, r io.Reader) error {
+	return readOutput(ctx, r, 0)
 }
 
-func (c forcePlatformType) modify(_ *promptFlags) error {
+func (c forcePlatformType) Modify(_ *promptFlags) error {
 	return nil
 }

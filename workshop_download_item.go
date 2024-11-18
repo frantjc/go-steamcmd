@@ -17,7 +17,7 @@ func (c *workshopDownloadItem) String() string {
 	return fmt.Sprintf("%d/%d", c.AppID, c.PublishedFileID)
 }
 
-func (*workshopDownloadItem) check(flags *promptFlags) error {
+func (*workshopDownloadItem) Check(flags *promptFlags) error {
 	if !flags.loggedIn {
 		return fmt.Errorf("cannot workshop_download_item before login")
 	}
@@ -25,7 +25,7 @@ func (*workshopDownloadItem) check(flags *promptFlags) error {
 	return nil
 }
 
-func (c *workshopDownloadItem) args() ([]string, error) {
+func (c *workshopDownloadItem) Args() ([]string, error) {
 	if c == nil || c.AppID == 0 || c.PublishedFileID == 0 {
 		return nil, fmt.Errorf("workshop_download_item requires app ID and published file ID")
 	}
@@ -35,10 +35,10 @@ func (c *workshopDownloadItem) args() ([]string, error) {
 	return args, nil
 }
 
-func (c *workshopDownloadItem) readOutput(ctx context.Context, r io.Reader) error {
-	return base.readOutput(ctx, r)
+func (c *workshopDownloadItem) ReadOutput(ctx context.Context, r io.Reader) error {
+	return readOutput(ctx, r, 0)
 }
 
-func (c *workshopDownloadItem) modify(_ *promptFlags) error {
+func (c *workshopDownloadItem) Modify(_ *promptFlags) error {
 	return nil
 }

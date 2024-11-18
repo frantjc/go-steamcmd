@@ -20,7 +20,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	defer prompt.Quit(ctx)
+	defer prompt.Close(ctx)
 
 	if err = prompt.Login(ctx); err != nil {
 		panic(err)

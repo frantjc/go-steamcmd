@@ -2,26 +2,28 @@ package main
 
 import (
 	"context"
-	"fmt"
-	"path/filepath"
+	"os"
 
 	"github.com/frantjc/go-steamcmd"
-	"github.com/frantjc/go-steamcmd/internal"
 )
 
 func main() {
 	var (
 		ctx   = context.Background()
 		appID = 896660
-		tmp   = filepath.Join(internal.Cache, fmt.Sprint(appID))
 	)
 
 	prompt, err := steamcmd.Start(ctx)
 	if err != nil {
 		panic(err)
 	}
+	defer prompt.Close(ctx)
 
-	if err := prompt.ForceInstallDir(ctx, tmp); err != nil {
+	if err := prompt.ForceInstallDir(ctx, os.Args[1]); err != nil {
+		panic(err)
+	}
+
+	if err := prompt.ForcePlatformType(ctx, steamcmd.PlatformTypeLinux); err != nil {
 		panic(err)
 	}
 

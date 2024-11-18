@@ -15,7 +15,7 @@ type appUpdate struct {
 
 var _ cmd = new(appUpdate)
 
-func (*appUpdate) check(flags *promptFlags) error {
+func (*appUpdate) Check(flags *promptFlags) error {
 	if !flags.loggedIn {
 		return fmt.Errorf("cannot app_update before login")
 	}
@@ -23,7 +23,7 @@ func (*appUpdate) check(flags *promptFlags) error {
 	return nil
 }
 
-func (c *appUpdate) args() ([]string, error) {
+func (c *appUpdate) Args() ([]string, error) {
 	if c == nil || c.AppID == 0 {
 		return nil, fmt.Errorf("app_update requires app ID")
 	}
@@ -45,10 +45,10 @@ func (c *appUpdate) args() ([]string, error) {
 	return args, nil
 }
 
-func (c *appUpdate) readOutput(ctx context.Context, r io.Reader) error {
-	return base.readOutput(ctx, r)
+func (c *appUpdate) ReadOutput(ctx context.Context, r io.Reader) error {
+	return readOutput(ctx, r, 0)
 }
 
-func (c *appUpdate) modify(_ *promptFlags) error {
+func (c *appUpdate) Modify(_ *promptFlags) error {
 	return nil
 }

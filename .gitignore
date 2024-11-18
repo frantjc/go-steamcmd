@@ -11,3 +11,5 @@ vendor/
 # steamcmd
 bin/
 Frameworks
+
+hack/

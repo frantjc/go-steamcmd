@@ -2,7 +2,6 @@ package steamcmd
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"io"
 	"sync"
@@ -14,12 +13,11 @@ type promptFlags struct {
 	loggedIn bool
 }
 
-type prompt struct {
+type Prompt struct {
 	flags  *promptFlags
-	stdin  io.Writer
-	stdout io.Reader
+	stdin  io.WriteCloser
+	stdout io.ReadCloser
 	mu     sync.Mutex
-	err    error
 }
 
 type AppUpdateOpt func(*appUpdate)
@@ -50,36 +48,25 @@ func WithSteamGuardCode(steamGuardCode string) LoginOpt {
 	}
 }
 
-type Prompt interface {
-	ForceInstallDir(context.Context, string) error
-	Login(context.Context, ...LoginOpt) error
-	ForcePlatformType(context.Context, PlatformType) error
-	AppUpdate(context.Context, int, ...AppUpdateOpt) error
-	AppInfoPrint(context.Context, int) (*AppInfo, error)
-	AppInfoRequest(context.Context, int) error
-	WorkshopDownloadItem(context.Context, int, int) error
-	Quit(context.Context) error
+func (p *Prompt) ForceInstallDir(ctx context.Context, dir string) error {
+	return p.run(ctx, forceInstallDir(dir))
 }
 
-func (p *prompt) ForceInstallDir(ctx context.Context, dir string) error {
-	return errors.Join(p.err, p.run(ctx, forceInstallDir(dir)))
+func (p *Prompt) ForcePlatformType(ctx context.Context, platformType PlatformType) error {
+	return p.run(ctx, forcePlatformType(platformType))
 }
 
-func (p *prompt) ForcePlatformType(ctx context.Context, platformType PlatformType) error {
-	return errors.Join(p.err, p.run(ctx, forcePlatformType(platformType)))
-}
-
-func (p *prompt) Login(ctx context.Context, opts ...LoginOpt) error {
+func (p *Prompt) Login(ctx context.Context, opts ...LoginOpt) error {
 	cmd := &login{}
 
 	for _, opt := range opts {
 		opt(cmd)
 	}
 
-	return errors.Join(p.err, p.run(ctx, cmd))
+	return p.run(ctx, cmd)
 }
 
-func (p *prompt) AppUpdate(ctx context.Context, appID int, opts ...AppUpdateOpt) error {
+func (p *Prompt) AppUpdate(ctx context.Context, appID int, opts ...AppUpdateOpt) error {
 	cmd := &appUpdate{
 		AppID: appID,
 	}
@@ -88,15 +75,15 @@ func (p *prompt) AppUpdate(ctx context.Context, appID int, opts ...AppUpdateOpt)
 		opt(cmd)
 	}
 
-	return errors.Join(p.err, p.run(ctx, cmd))
+	return p.run(ctx, cmd)
 }
 
-func (p *prompt) AppInfoPrint(ctx context.Context, appID int) (*AppInfo, error) {
+func (p *Prompt) AppInfoPrint(ctx context.Context, appID int) (*AppInfo, error) {
 	if appInfo, ok := appInfos[appID]; ok {
 		return &appInfo, nil
 	}
 
-	if err := errors.Join(p.err, p.run(ctx, appInfoPrint(appID))); err != nil {
+	if err := p.run(ctx, appInfoPrint(appID)); err != nil {
 		return nil, err
 	}
 
@@ -105,34 +92,39 @@ func (p *prompt) AppInfoPrint(ctx context.Context, appID int) (*AppInfo, error) 
 	return &appInfo, nil
 }
 
-func (p *prompt) AppInfoRequest(ctx context.Context, appID int) error {
+func (p *Prompt) AppInfoRequest(ctx context.Context, appID int) error {
 	if _, ok := appInfos[appID]; ok {
 		return nil
 	}
 
-	return errors.Join(p.err, p.run(ctx, appInfoRequest(appID)))
+	return p.run(ctx, appInfoRequest(appID))
 }
 
-func (p *prompt) WorkshopDownloadItem(ctx context.Context, appID, publishedFileID int) error {
-	return errors.Join(p.err, p.run(ctx, &workshopDownloadItem{
+func (p *Prompt) WorkshopDownloadItem(ctx context.Context, appID, publishedFileID int) error {
+	return p.run(ctx, &workshopDownloadItem{
 		AppID:           appID,
 		PublishedFileID: publishedFileID,
-	}))
+	})
 }
 
-func (p *prompt) Quit(ctx context.Context) error {
-	return errors.Join(p.err, p.run(ctx, quit))
+func (p *Prompt) Close(ctx context.Context) error {
+	defer p.stdin.Close()
+	defer p.stdout.Close()
+	return p.run(ctx, quit)
 }
 
-func (p *prompt) run(ctx context.Context, cmd cmd) error {
-	if err := cmd.check(p.flags); err != nil {
+func (p *Prompt) run(ctx context.Context, cmd cmd) error {
+	if err := cmd.Check(p.flags); err != nil {
 		return err
 	}
 
-	args, err := cmd.args()
+	args, err := cmd.Args()
 	if err != nil {
 		return err
 	}
+
+	p.mu.Lock()
+	defer p.mu.Unlock()
 
 	if _, err := fmt.Fprintln(p.stdin, xslice.Map(args, func(arg string, _ int) any {
 		return arg
@@ -140,9 +132,9 @@ func (p *prompt) run(ctx context.Context, cmd cmd) error {
 		return err
 	}
 
-	if err := cmd.readOutput(ctx, p.stdout); err != nil {
+	if err := cmd.ReadOutput(ctx, p.stdout); err != nil {
 		return err
 	}
 
-	return cmd.modify(p.flags)
+	return cmd.Modify(p.flags)
 }

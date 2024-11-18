@@ -4,7 +4,7 @@ import (
 	"context"
 )
 
-func Start(ctx context.Context) (Prompt, error) {
+func Start(ctx context.Context) (*Prompt, error) {
 	c, err := New(ctx)
 	if err != nil {
 		return nil, err

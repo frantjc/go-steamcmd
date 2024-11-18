@@ -14,18 +14,18 @@ type anyCommand struct {
 
 var _ cmd = &anyCommand{}
 
-func (c *anyCommand) check(flags *promptFlags) error {
+func (c *anyCommand) Check(flags *promptFlags) error {
 	return c.checkFn(flags)
 }
 
-func (c *anyCommand) args() ([]string, error) {
+func (c *anyCommand) Args() ([]string, error) {
 	return c.argsFn()
 }
 
-func (c *anyCommand) readOutput(ctx context.Context, r io.Reader) error {
+func (c *anyCommand) ReadOutput(ctx context.Context, r io.Reader) error {
 	return c.readOutputFn(ctx, r)
 }
 
-func (c *anyCommand) modify(flags *promptFlags) error {
+func (c *anyCommand) Modify(flags *promptFlags) error {
 	return c.modifyFn(flags)
 }

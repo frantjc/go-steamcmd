@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"io"
-	"os"
 	"path/filepath"
 )
 
@@ -16,7 +15,7 @@ func (c forceInstallDir) String() string {
 	return string(c)
 }
 
-func (forceInstallDir) check(flags *promptFlags) error {
+func (forceInstallDir) Check(flags *promptFlags) error {
 	if flags.loggedIn {
 		return fmt.Errorf("cannot force_install_dir after login")
 	}
@@ -24,7 +23,7 @@ func (forceInstallDir) check(flags *promptFlags) error {
 	return nil
 }
 
-func (c forceInstallDir) args() ([]string, error) {
+func (c forceInstallDir) Args() ([]string, error) {
 	if c == "" {
 		return nil, fmt.Errorf("empty force_install_dir")
 	}
@@ -34,17 +33,13 @@ func (c forceInstallDir) args() ([]string, error) {
 		return nil, err
 	}
 
-	if err := os.MkdirAll(a, 0o644); err != nil {
-		return nil, err
-	}
-
 	return []string{"force_install_dir", a}, nil
 }
 
-func (c forceInstallDir) readOutput(ctx context.Context, r io.Reader) error {
-	return base.readOutput(ctx, r)
+func (c forceInstallDir) ReadOutput(ctx context.Context, r io.Reader) error {
+	return readOutput(ctx, r, 0)
 }
 
-func (c forceInstallDir) modify(_ *promptFlags) error {
+func (c forceInstallDir) Modify(_ *promptFlags) error {
 	return nil
 }
