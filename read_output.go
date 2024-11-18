@@ -3,7 +3,6 @@ package steamcmd
 import (
 	"bytes"
 	"context"
-	"fmt"
 	"io"
 	"strings"
 
@@ -17,15 +16,14 @@ var (
 )
 
 func readOutput(ctx context.Context, r io.Reader, appID int) error {
-	var (
-		errC = make(chan error, 1)
-		buf  = new(bytes.Buffer)
-	)
+	errC := make(chan error, 1)
 
 	go func() {
 		defer close(errC)
 
 		errC <- func() error {
+			buf := new(bytes.Buffer)
+
 			for {
 				var b [512]byte
 
@@ -41,10 +39,16 @@ func readOutput(ctx context.Context, r io.Reader, appID int) error {
 				p := buf.Bytes()
 				if _, msgB, found := bytes.Cut(p, errBytes); found {
 					msgB, _, _ = bytes.Cut(msgB, []byte("\n"))
-					return fmt.Errorf("%s", strings.ToLower(string(msgB)))
+					return &CommandError{
+						Msg:    strings.ToLower(string(msgB)),
+						Output: p,
+					}
 				} else if _, msgB, found := bytes.Cut(p, failedBytes); found {
 					msgB, _, _ = bytes.Cut(msgB, []byte("\n"))
-					return fmt.Errorf("%s", strings.ToLower(string(msgB)))
+					return &CommandError{
+						Msg:    strings.ToLower(string(msgB)),
+						Output: p,
+					}
 				} else if appID > 0 {
 					if i := bytes.Index(p, []byte("{")); i >= 0 {
 						appInfo := &AppInfo{}
@@ -55,7 +59,11 @@ func readOutput(ctx context.Context, r io.Reader, appID int) error {
 								r,
 							),
 						).Decode(appInfo); err != nil {
-							return err
+							return &CommandError{
+								Msg:    "decoding vdf",
+								Err:    err,
+								Output: p,
+							}
 						}
 
 						appInfos[appID] = *appInfo
