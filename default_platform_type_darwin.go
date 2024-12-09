@@ -1,5 +1,3 @@
 package steamcmd
 
-var (
-	DefaultPlatformType = PlatformTypeMacOS
-)
+var DefaultPlatformType = PlatformTypeMacOS

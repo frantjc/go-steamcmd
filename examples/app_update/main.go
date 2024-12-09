@@ -10,7 +10,7 @@ import (
 func main() {
 	var (
 		ctx   = context.Background()
-		appID = 896660
+		appID = 730
 	)
 
 	prompt, err := steamcmd.Start(ctx)
