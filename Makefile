@@ -21,19 +21,3 @@ dl: download
 ven: vendor
 ver: verify
 format: fmt
-
-BIN = bin
-
-.PHONY: $(BIN)
-$(BIN):
-	@mkdir -p $(BIN)
-
-STEAMCMD = $(BIN)/steamcmd
-STEAMCMD_TGZ_URL = https://steamcdn-a.akamaihd.net/client/installer/steamcmd_osx.tar.gz
-
-.PHONY: $(STEAMCMD)
-steamcmd $(STEAMCMD): $(BIN)
-	@test -s $(CONTROLLER_GEN) || \
-		curl -sqL "$(STEAMCMD_TGZ_URL)" \
-			| tar -C $(BIN) -zxvf -
-

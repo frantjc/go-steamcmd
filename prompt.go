@@ -2,6 +2,7 @@ package steamcmd
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"io"
 	"sync"
@@ -17,6 +18,7 @@ type Prompt struct {
 	flags  *promptFlags
 	stdin  io.WriteCloser
 	stdout io.ReadCloser
+	err    error
 	mu     sync.Mutex
 }
 
@@ -108,12 +110,14 @@ func (p *Prompt) WorkshopDownloadItem(ctx context.Context, appID, publishedFileI
 }
 
 func (p *Prompt) Close(ctx context.Context) error {
-	defer p.stdin.Close()
-	defer p.stdout.Close()
-	return p.run(ctx, quit)
+	return errors.Join(p.run(ctx, quit), p.stdin.Close(), p.stdout.Close())
 }
 
 func (p *Prompt) run(ctx context.Context, cmd cmd) error {
+	if p.err != nil {
+		return p.err
+	}
+
 	if err := cmd.Check(p.flags); err != nil {
 		return err
 	}

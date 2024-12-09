@@ -2,6 +2,7 @@ package steamcmd
 
 import (
 	"context"
+	"io"
 	"os/exec"
 )
 
@@ -12,26 +13,52 @@ func (c Command) String() string {
 }
 
 func (c Command) Start(ctx context.Context) (*Prompt, error) {
-	//nolint:gosec
-	cmd := exec.CommandContext(ctx, c.String())
+	var (
+		//nolint:gosec
+		cmd = exec.CommandContext(ctx, c.String())
+	)
 
 	stdin, err := cmd.StdinPipe()
 	if err != nil {
 		return nil, err
 	}
 
-	stdout, err := cmd.StdoutPipe()
+	stdout, stderr, err := pipes(cmd)
 	if err != nil {
 		return nil, err
 	}
+
+	p := &Prompt{
+		flags:  &promptFlags{},
+		stdin:  stdin,
+		stdout: stdout,
+	}
+
+	go func() {
+		defer stderr.Close()
+
+		if err = func() error {
+			if _, err = io.Copy(io.Discard, stderr); err != nil {
+				return err
+			}
+
+			return stderr.Close()
+		}(); err != nil {
+			p.err = err
+		}
+	}()
 
 	if err := cmd.Start(); err != nil {
 		return nil, err
 	}
 
-	return &Prompt{
-		flags:  &promptFlags{},
-		stdin:  stdin,
-		stdout: stdout,
-	}, readOutput(ctx, stdout, 0)
+	go func() {
+		p.err = cmd.Wait()
+	}()
+
+	if err = readOutput(ctx, stdout, 0); err != nil {
+		return nil, err
+	}
+
+	return p, p.err
 }

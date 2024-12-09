@@ -13,7 +13,7 @@ const (
 )
 
 func TestAppInfoPrint(t *testing.T) {
-	ctx, stop := context.WithTimeout(context.TODO(), time.Minute)
+	ctx, stop := context.WithTimeout(context.TODO(), time.Second*33)
 	defer stop()
 
 	prompt, err := steamcmd.Start(ctx)

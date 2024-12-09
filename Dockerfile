@@ -4,6 +4,14 @@ COPY go.mod go.sum ./
 RUN go mod download
 COPY . .
 
+FROM build0 AS test
+RUN apt-get update -y \
+    && apt-get install -y --no-install-recommends \
+        ca-certificates \
+        lib32gcc-s1 \
+    && rm -rf /var/lib/apt/lists/*
+RUN make test
+
 FROM build0 AS build1
 RUN go build -o /steamcmdw ./cmd/steamcmdw
 
