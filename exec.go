@@ -23,7 +23,12 @@ func (c Command) Start(ctx context.Context) (*Prompt, error) {
 		return nil, err
 	}
 
-	stdout, stderr, err := pipes(cmd)
+	stdout, err := cmd.StdoutPipe()
+	if err != nil {
+		return nil, err
+	}
+
+	stderr, err := cmd.StderrPipe()
 	if err != nil {
 		return nil, err
 	}
@@ -56,7 +61,7 @@ func (c Command) Start(ctx context.Context) (*Prompt, error) {
 		p.err = cmd.Wait()
 	}()
 
-	if err = readOutput(ctx, stdout, 0); err != nil {
+	if err = readOutput(ctx, p, 0); err != nil {
 		return nil, err
 	}
 

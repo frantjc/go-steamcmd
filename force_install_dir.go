@@ -3,7 +3,6 @@ package steamcmd
 import (
 	"context"
 	"fmt"
-	"io"
 	"path/filepath"
 )
 
@@ -15,7 +14,7 @@ func (c forceInstallDir) String() string {
 	return string(c)
 }
 
-func (forceInstallDir) Check(flags *promptFlags) error {
+func (forceInstallDir) check(flags *promptFlags) error {
 	if flags.loggedIn {
 		return fmt.Errorf("cannot force_install_dir after login")
 	}
@@ -23,7 +22,7 @@ func (forceInstallDir) Check(flags *promptFlags) error {
 	return nil
 }
 
-func (c forceInstallDir) Args() ([]string, error) {
+func (c forceInstallDir) args() ([]string, error) {
 	if c == "" {
 		return nil, fmt.Errorf("empty force_install_dir")
 	}
@@ -36,10 +35,10 @@ func (c forceInstallDir) Args() ([]string, error) {
 	return []string{"force_install_dir", a}, nil
 }
 
-func (c forceInstallDir) ReadOutput(ctx context.Context, r io.Reader) error {
-	return readOutput(ctx, r, 0)
+func (c forceInstallDir) readOutput(ctx context.Context, p *Prompt) error {
+	return readOutput(ctx, p, 0)
 }
 
-func (c forceInstallDir) Modify(_ *promptFlags) error {
+func (c forceInstallDir) modify(_ *promptFlags) error {
 	return nil
 }

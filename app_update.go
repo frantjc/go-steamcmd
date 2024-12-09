@@ -3,7 +3,6 @@ package steamcmd
 import (
 	"context"
 	"fmt"
-	"io"
 )
 
 type appUpdate struct {
@@ -15,7 +14,7 @@ type appUpdate struct {
 
 var _ cmd = new(appUpdate)
 
-func (*appUpdate) Check(flags *promptFlags) error {
+func (*appUpdate) check(flags *promptFlags) error {
 	if !flags.loggedIn {
 		return fmt.Errorf("cannot app_update before login")
 	}
@@ -23,7 +22,7 @@ func (*appUpdate) Check(flags *promptFlags) error {
 	return nil
 }
 
-func (c *appUpdate) Args() ([]string, error) {
+func (c *appUpdate) args() ([]string, error) {
 	if c == nil || c.AppID == 0 {
 		return nil, fmt.Errorf("app_update requires app ID")
 	}
@@ -45,10 +44,10 @@ func (c *appUpdate) Args() ([]string, error) {
 	return args, nil
 }
 
-func (c *appUpdate) ReadOutput(ctx context.Context, r io.Reader) error {
-	return readOutput(ctx, r, 0)
+func (c *appUpdate) readOutput(ctx context.Context, p *Prompt) error {
+	return readOutput(ctx, p, 0)
 }
 
-func (c *appUpdate) Modify(_ *promptFlags) error {
+func (c *appUpdate) modify(_ *promptFlags) error {
 	return nil
 }

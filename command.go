@@ -1,13 +1,10 @@
 package steamcmd
 
-import (
-	"context"
-	"io"
-)
+import "context"
 
 type cmd interface {
-	Check(*promptFlags) error
-	Args() ([]string, error)
-	ReadOutput(context.Context, io.Reader) error
-	Modify(*promptFlags) error
+	check(*promptFlags) error
+	args() ([]string, error)
+	readOutput(context.Context, *Prompt) error
+	modify(*promptFlags) error
 }

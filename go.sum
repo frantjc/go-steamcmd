@@ -7,6 +7,8 @@ github.com/frantjc/go-encoding-vdf v0.0.0-20240928221613-2ef12628042f h1:fy+VU2K
 github.com/frantjc/go-encoding-vdf v0.0.0-20240928221613-2ef12628042f/go.mod h1:zY83TMnjTQ2hUDsJINasa1N+ZyxHoIvFGYHZBl2RyN0=
 github.com/frantjc/x v0.0.0-20241020020722-32dbfd24b732 h1:V0viQQFfX0ocKJdXMZbTqGw5BVEuouj4oVOm3GFmf7A=
 github.com/frantjc/x v0.0.0-20241020020722-32dbfd24b732/go.mod h1:jzQwn2fyR0LRUO37WetnmJkZWmVR2GjhCD1QuaAJSPo=
+github.com/frantjc/x v0.0.0-20241124205504-36ac48ec4307 h1:w9KZ/2lUuz8EL9lGtNIFdExsFaabbo1mjPqzbzz59jA=
+github.com/frantjc/x v0.0.0-20241124205504-36ac48ec4307/go.mod h1:jzQwn2fyR0LRUO37WetnmJkZWmVR2GjhCD1QuaAJSPo=
 github.com/inconshreveable/mousetrap v1.1.0 h1:wN+x4NVGpMsO7ErUn/mUI3vEoE6Jt13X2s0bqwp9tc8=
 github.com/inconshreveable/mousetrap v1.1.0/go.mod h1:vpF70FUmC8bwa3OWnCshd2FqLfsEA9PFc4w1p2J65bw=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=

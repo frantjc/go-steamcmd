@@ -118,11 +118,11 @@ func (p *Prompt) run(ctx context.Context, cmd cmd) error {
 		return p.err
 	}
 
-	if err := cmd.Check(p.flags); err != nil {
+	if err := cmd.check(p.flags); err != nil {
 		return err
 	}
 
-	args, err := cmd.Args()
+	args, err := cmd.args()
 	if err != nil {
 		return err
 	}
@@ -136,9 +136,9 @@ func (p *Prompt) run(ctx context.Context, cmd cmd) error {
 		return err
 	}
 
-	if err := cmd.ReadOutput(ctx, p.stdout); err != nil {
+	if err := cmd.readOutput(ctx, p); err != nil {
 		return err
 	}
 
-	return cmd.Modify(p.flags)
+	return cmd.modify(p.flags)
 }

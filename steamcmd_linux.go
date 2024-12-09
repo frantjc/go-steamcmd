@@ -2,11 +2,7 @@
 
 package steamcmd
 
-import (
-	"io"
-	"net/url"
-	"os/exec"
-)
+import "net/url"
 
 var (
 	DownloadURL = func() *url.URL {
@@ -20,11 +16,3 @@ var (
 	DefaultPlatformType = PlatformTypeLinux
 	steamcmdBinaryPath  = "linux32/steamcmd"
 )
-
-func pipes(cmd *exec.Cmd) (io.ReadCloser, io.ReadCloser, error) {
-	stdoutr, stdoutw := io.Pipe()
-	cmd.Stdout = stdoutw
-	stderrr, stderrw := io.Pipe()
-	cmd.Stderr = stderrw
-	return stdoutr, stderrr, nil
-}

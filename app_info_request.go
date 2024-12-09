@@ -3,7 +3,6 @@ package steamcmd
 import (
 	"context"
 	"fmt"
-	"io"
 )
 
 type appInfoRequest int
@@ -14,7 +13,7 @@ func (c appInfoRequest) String() string {
 	return fmt.Sprintf("%d", c)
 }
 
-func (c appInfoRequest) Check(flags *promptFlags) error {
+func (c appInfoRequest) check(flags *promptFlags) error {
 	if !flags.loggedIn {
 		return fmt.Errorf("cannot app_info_request before login")
 	}
@@ -22,7 +21,7 @@ func (c appInfoRequest) Check(flags *promptFlags) error {
 	return nil
 }
 
-func (c appInfoRequest) Args() ([]string, error) {
+func (c appInfoRequest) args() ([]string, error) {
 	if c == 0 {
 		return nil, fmt.Errorf("app_info_request requires app ID")
 	}
@@ -30,10 +29,10 @@ func (c appInfoRequest) Args() ([]string, error) {
 	return []string{"app_info_request", c.String()}, nil
 }
 
-func (c appInfoRequest) ReadOutput(ctx context.Context, r io.Reader) error {
-	return readOutput(ctx, r, 0)
+func (c appInfoRequest) readOutput(ctx context.Context, p *Prompt) error {
+	return readOutput(ctx, p, 0)
 }
 
-func (c appInfoRequest) Modify(_ *promptFlags) error {
+func (c appInfoRequest) modify(_ *promptFlags) error {
 	return nil
 }
