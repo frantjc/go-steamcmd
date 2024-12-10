@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"sync"
+	"time"
 
 	xslice "github.com/frantjc/x/slice"
 )
@@ -84,6 +85,12 @@ func (p *Prompt) AppInfoPrint(ctx context.Context, appID int) (*AppInfo, error) 
 	if appInfo, ok := appInfos[appID]; ok {
 		return &appInfo, nil
 	}
+
+	if err := p.run(ctx, appInfoRequest(appID)); err != nil {
+		return nil, err
+	}
+
+	time.Sleep(time.Second)
 
 	if err := p.run(ctx, appInfoPrint(appID)); err != nil {
 		return nil, err

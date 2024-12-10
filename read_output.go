@@ -59,14 +59,13 @@ func readOutput(ctx context.Context, p *Prompt, appID int) error {
 						// On Linux, steamcmd needs a kick to make it
 						// finish printing the output of app_info_print.
 						if runtime.GOOS == "linux" {
-							cctx, cancel := context.WithTimeout(ctx, time.Second*9)
+							cctx, cancel := context.WithCancel(ctx)
 							defer cancel()
 
 							go func() {
 								for {
 									select {
 									case <-cctx.Done():
-										return
 									case <-time.NewTimer(time.Second).C:
 										_, _ = fmt.Fprintln(p.stdin)
 									}
