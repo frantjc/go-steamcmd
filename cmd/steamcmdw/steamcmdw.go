@@ -6,7 +6,6 @@ import (
 	"runtime"
 
 	"github.com/frantjc/go-steamcmd"
-	"github.com/frantjc/go-steamcmd/internal"
 	"github.com/spf13/cobra"
 )
 
@@ -19,7 +18,7 @@ func NewEntrypoint() *cobra.Command {
 			SilenceUsage:  true,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				if clean {
-					return os.RemoveAll(internal.Cache)
+					return steamcmd.Clean()
 				}
 
 				c, err := steamcmd.New(cmd.Context())

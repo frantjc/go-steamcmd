@@ -14,7 +14,7 @@ import (
 	"os/exec"
 	"path/filepath"
 
-	"github.com/frantjc/go-steamcmd/internal"
+	"github.com/frantjc/go-steamcmd/internal/cache"
 	xtar "github.com/frantjc/x/archive/tar"
 )
 
@@ -40,7 +40,7 @@ func New(ctx context.Context) (Command, error) {
 
 	if bin, err := exec.LookPath(entrypoint); errors.Is(err, exec.ErrDot) || err == nil {
 		return Command(bin), nil
-	} else if _, err := os.Stat(filepath.Join(internal.Cache, entrypoint)); errors.Is(err, os.ErrNotExist) {
+	} else if _, err := os.Stat(filepath.Join(cache.Dir, entrypoint)); errors.Is(err, os.ErrNotExist) {
 		rc, err := Download(ctx)
 		if err != nil {
 			return "", err
@@ -53,12 +53,12 @@ func New(ctx context.Context) (Command, error) {
 		}
 		defer r.Close()
 
-		if err = xtar.Extract(tar.NewReader(r), internal.Cache); err != nil {
+		if err = xtar.Extract(tar.NewReader(r), cache.Dir); err != nil {
 			return "", fmt.Errorf("steamcmd: extracting download tarball: %w", err)
 		}
 	} else if err != nil {
 		return "", err
 	}
 
-	return Command(filepath.Join(internal.Cache, entrypoint)), nil
+	return Command(filepath.Join(cache.Dir, entrypoint)), nil
 }
