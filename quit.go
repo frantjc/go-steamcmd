@@ -8,7 +8,7 @@ func (q *q) String() string {
 	return "quit"
 }
 
-func (*q) check(flags *flags) error {
+func (*q) check(_ *flags) error {
 	return nil
 }
 

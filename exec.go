@@ -146,7 +146,7 @@ func (p *Prompt) Run(ctx context.Context, commands ...Command) error {
 	return nil
 }
 
-func (p *Prompt) Close(ctx context.Context) error {
+func (p *Prompt) Close() error {
 	if _, err := fmt.Fprintln(p.stdin, "quit"); err != nil {
 		return err
 	}
