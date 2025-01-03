@@ -97,6 +97,14 @@ func (p *Prompt) readOutput(ctx context.Context) error {
 					}
 
 					appInfos[appInfo.Common.GameID] = *appInfo
+
+					// If this is nil, then we're running as a prompt and need to exit so that
+					// the next command can get ran. If it's not nil, then we're running as a
+					// script and should keep reading the output as the next command is already
+					// queued up.
+					if p.stdin != nil {
+						return nil
+					}
 				}
 			}
 		}()
