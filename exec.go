@@ -7,6 +7,7 @@ import (
 	"io"
 	"os/exec"
 	"runtime"
+	"strconv"
 	"strings"
 	"sync"
 	"time"
@@ -41,9 +42,11 @@ type Prompt struct {
 }
 
 var (
-	promptBytes = []byte("Steam>")
-	errBytes    = []byte("ERROR! ")
-	failedBytes = []byte("FAILED ")
+	promptBytes                  = []byte("Steam>")
+	errBytes                     = []byte("ERROR! ")
+	failedBytes                  = []byte("FAILED ")
+	requestingAppInfoPrefixBytes = []byte("No app info for AppID ")
+	requestingAppInfoSuffixBytes = []byte(" found, requesting...")
 )
 
 func (p *Prompt) readOutput(ctx context.Context) error {
@@ -82,6 +85,27 @@ func (p *Prompt) readOutput(ctx context.Context) error {
 					}
 				} else if bytes.Contains(q, promptBytes) {
 					return nil
+				} else if p.stdin != nil && bytes.Contains(q, requestingAppInfoPrefixBytes) && bytes.Contains(q, requestingAppInfoSuffixBytes) {
+					// Handle a special case where steamcmd requests the app info because
+					// it does not have it and then hangs without more input.
+					_, appIDBytes, _ := bytes.Cut(q, requestingAppInfoPrefixBytes)
+					appIDBytes, _, _ = bytes.Cut(appIDBytes, requestingAppInfoSuffixBytes)
+					appID, err := strconv.Atoi(string(bytes.TrimSpace(appIDBytes)))
+					if err != nil {
+						return &CommandError{
+							Msg:    "parsing appID to rerequest app info",
+							Err:    err,
+							Output: q,
+						}
+					}
+
+					if _, err := fmt.Fprintln(p.stdin, "app_info_print", fmt.Sprint(appID)); err != nil {
+						return &CommandError{
+							Msg:    "rerequesting app info",
+							Err:    err,
+							Output: q,
+						}
+					}
 				} else if i := bytes.Index(q, []byte("{")); i >= 0 {
 					appInfo := &AppInfo{}
 
