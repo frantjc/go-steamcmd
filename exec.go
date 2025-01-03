@@ -6,8 +6,10 @@ import (
 	"fmt"
 	"io"
 	"os/exec"
+	"runtime"
 	"strings"
 	"sync"
+	"time"
 
 	vdf "github.com/frantjc/go-encoding-vdf"
 	xerrors "github.com/frantjc/x/errors"
@@ -82,6 +84,25 @@ func (p *Prompt) readOutput(ctx context.Context) error {
 					return nil
 				} else if i := bytes.Index(q, []byte("{")); i >= 0 {
 					appInfo := &AppInfo{}
+
+					// On Linux, steamcmd needs a kick to make it
+					// finish printing the output of app_info_print
+					// if we're running as a prompt.
+					if runtime.GOOS == "linux" && p.stdin != nil {
+						cctx, cancel := context.WithCancel(ctx)
+						defer cancel()
+
+						go func() {
+							for {
+								select {
+								case <-cctx.Done():
+									return
+								case <-time.NewTimer(time.Second).C:
+									_, _ = fmt.Fprintln(p.stdin)
+								}
+							}
+						}()
+					}
 
 					if err := vdf.NewDecoder(
 						io.MultiReader(
