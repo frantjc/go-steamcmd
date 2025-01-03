@@ -3,63 +3,63 @@ package steamcmd_test
 import (
 	"context"
 	"testing"
-	"time"
 
 	"github.com/frantjc/go-steamcmd"
 )
 
-const (
-	AppID = 730
+var (
+	// CS2, Core Keeper (server), Valheim (server).
+	AppIDs = []int{730, 1963720, 896660}
 )
 
 func TestAppInfoPrint(t *testing.T) {
-	ctx, stop := context.WithTimeout(context.TODO(), time.Second*33)
-	defer stop()
+	ctx := context.TODO()
 
-	if _, err := steamcmd.NewPrompt(ctx,
-		steamcmd.ForcePlatformType(steamcmd.PlatformTypeLinux),
-		steamcmd.Login{},
-		steamcmd.AppInfoRequest(AppID),
-		steamcmd.AppInfoPrint(AppID),
-		steamcmd.Quit,
-	); err != nil {
-		t.Error(err)
-		t.FailNow()
-	}
+	for _, appID := range AppIDs {
+		if err := steamcmd.Run(ctx,
+			steamcmd.ForcePlatformType(steamcmd.PlatformTypeLinux),
+			steamcmd.Login{},
+			steamcmd.AppInfoRequest(appID),
+			steamcmd.AppInfoPrint(appID),
+		); err != nil {
+			t.Error(err)
+			t.FailNow()
+		}
 
-	appInfo, found := steamcmd.GetAppInfo(AppID)
-	if !found {
-		t.Error("did not get app info for app ID", AppID)
-		t.FailNow()
-	}
+		appInfo, found := steamcmd.GetAppInfo(appID)
+		if !found {
+			t.Error("did not get app info for app ID", appID)
+			t.FailNow()
+		}
 
-	if appInfo.Common.GameID != AppID {
-		t.Error("got wrong app ID", appInfo.Common.GameID)
-		t.FailNow()
+		if appInfo.Common.GameID != appID {
+			t.Error("got wrong app ID", appInfo.Common.GameID)
+			t.FailNow()
+		}
 	}
 }
 
 func TestPrompt(t *testing.T) {
-	ctx, stop := context.WithTimeout(context.TODO(), time.Second*33)
-	defer stop()
+	ctx := context.TODO()
 
-	prompt, err := steamcmd.NewPrompt(ctx,
-		steamcmd.ForcePlatformType(steamcmd.PlatformTypeLinux),
-		steamcmd.Login{},
-	)
-	if err != nil {
-		t.Error(err)
-		t.FailNow()
-	}
-	defer func() {
+	for _, appID := range AppIDs {
+		prompt, err := steamcmd.Start(ctx,
+			steamcmd.ForcePlatformType(steamcmd.PlatformTypeLinux),
+			steamcmd.Login{},
+		)
+		if err != nil {
+			t.Error(err)
+			t.FailNow()
+		}
+
+		if err = prompt.Run(ctx, steamcmd.AppInfoRequest(appID)); err != nil {
+			t.Error(err)
+			t.FailNow()
+		}
+
 		if err := prompt.Close(ctx); err != nil {
 			t.Error(err)
 			t.FailNow()
 		}
-	}()
-
-	if err = prompt.Run(ctx, steamcmd.AppInfoRequest(AppID)); err != nil {
-		t.Error(err)
-		t.FailNow()
 	}
 }

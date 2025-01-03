@@ -24,11 +24,11 @@ func (c ForcePlatformType) String() string {
 	return string(c)
 }
 
-func (c ForcePlatformType) Check(_ *Flags) error {
+func (c ForcePlatformType) check(_ *flags) error {
 	return nil
 }
 
-func (c ForcePlatformType) Args() ([]string, error) {
+func (c ForcePlatformType) args() ([]string, error) {
 	if c == "" {
 		return nil, fmt.Errorf("empty PlatformType")
 	}
@@ -36,6 +36,6 @@ func (c ForcePlatformType) Args() ([]string, error) {
 	return []string{"@sSteamCmdForcePlatformType", c.String()}, nil
 }
 
-func (c ForcePlatformType) Modify(_ *Flags) error {
+func (c ForcePlatformType) modify(_ *flags) error {
 	return nil
 }

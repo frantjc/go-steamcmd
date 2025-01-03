@@ -1,21 +1,21 @@
 package steamcmd
 
-var Quit = &quit{}
+var quit = &q{}
 
-type quit struct{}
+type q struct{}
 
-func (q *quit) String() string {
+func (q *q) String() string {
 	return "quit"
 }
 
-func (*quit) Check(flags *Flags) error {
+func (*q) check(flags *flags) error {
 	return nil
 }
 
-func (*quit) Args() ([]string, error) {
+func (*q) args() ([]string, error) {
 	return []string{"quit"}, nil
 }
 
-func (*quit) Modify(_ *Flags) error {
+func (*q) modify(_ *flags) error {
 	return nil
 }

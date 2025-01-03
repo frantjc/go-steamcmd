@@ -12,7 +12,7 @@ func (c AppInfoPrint) String() string {
 	return fmt.Sprintf("%d", c)
 }
 
-func (c AppInfoPrint) Check(flags *Flags) error {
+func (c AppInfoPrint) check(flags *flags) error {
 	if !flags.LoggedIn {
 		return fmt.Errorf("cannot app_info_print before login")
 	}
@@ -20,7 +20,7 @@ func (c AppInfoPrint) Check(flags *Flags) error {
 	return nil
 }
 
-func (c AppInfoPrint) Args() ([]string, error) {
+func (c AppInfoPrint) args() ([]string, error) {
 	if c == 0 {
 		return nil, fmt.Errorf("app_info_print requires app ID")
 	}
@@ -28,6 +28,6 @@ func (c AppInfoPrint) Args() ([]string, error) {
 	return []string{"app_info_print", c.String()}, nil
 }
 
-func (c AppInfoPrint) Modify(_ *Flags) error {
+func (c AppInfoPrint) modify(_ *flags) error {
 	return nil
 }

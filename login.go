@@ -10,11 +10,11 @@ type Login struct {
 	SteamGuardCode string
 }
 
-func (c Login) Check(_ *Flags) error {
+func (c Login) check(_ *flags) error {
 	return nil
 }
 
-func (c Login) Args() ([]string, error) {
+func (c Login) args() ([]string, error) {
 	if c.Username == "" || c.Username == "anonymous" {
 		return []string{"login", "anonymous"}, nil
 	}
@@ -37,12 +37,7 @@ func (c Login) Args() ([]string, error) {
 	return args, nil
 }
 
-func (Login) Modify(flags *Flags) error {
-	if flags == nil {
-		flags = &Flags{}
-	}
-
+func (Login) modify(flags *flags) error {
 	flags.LoggedIn = true
-
 	return nil
 }

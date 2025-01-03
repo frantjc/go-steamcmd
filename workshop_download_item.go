@@ -11,11 +11,11 @@ type WorkshopDownloadItem struct {
 
 var _ Command = new(WorkshopDownloadItem)
 
-func (c *WorkshopDownloadItem) String() string {
+func (c WorkshopDownloadItem) String() string {
 	return fmt.Sprintf("%d/%d", c.AppID, c.PublishedFileID)
 }
 
-func (*WorkshopDownloadItem) Check(flags *Flags) error {
+func (WorkshopDownloadItem) check(flags *flags) error {
 	if !flags.LoggedIn {
 		return fmt.Errorf("cannot workshop_download_item before login")
 	}
@@ -23,8 +23,8 @@ func (*WorkshopDownloadItem) Check(flags *Flags) error {
 	return nil
 }
 
-func (c *WorkshopDownloadItem) Args() ([]string, error) {
-	if c == nil || c.AppID == 0 || c.PublishedFileID == 0 {
+func (c WorkshopDownloadItem) args() ([]string, error) {
+	if c.AppID == 0 || c.PublishedFileID == 0 {
 		return nil, fmt.Errorf("workshop_download_item requires app ID and published file ID")
 	}
 
@@ -33,6 +33,6 @@ func (c *WorkshopDownloadItem) Args() ([]string, error) {
 	return args, nil
 }
 
-func (c *WorkshopDownloadItem) Modify(_ *Flags) error {
+func (c WorkshopDownloadItem) modify(_ *flags) error {
 	return nil
 }

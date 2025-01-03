@@ -3,7 +3,6 @@ package steamcmd
 import (
 	"bytes"
 	"context"
-	"errors"
 	"fmt"
 	"io"
 	"os/exec"
@@ -12,7 +11,7 @@ import (
 
 	vdf "github.com/frantjc/go-encoding-vdf"
 	xerrors "github.com/frantjc/x/errors"
-	"github.com/frantjc/x/slice"
+	xslice "github.com/frantjc/x/slice"
 )
 
 type Path string
@@ -21,21 +20,21 @@ func (c Path) String() string {
 	return string(c)
 }
 
-type Flags struct {
+type flags struct {
 	LoggedIn bool
 }
 
 type Command interface {
-	Check(*Flags) error
-	Args() ([]string, error)
-	Modify(*Flags) error
+	check(*flags) error
+	args() ([]string, error)
+	modify(*flags) error
 }
 
 type Prompt struct {
-	flags  *Flags
-	stdin  io.WriteCloser
-	stdout io.ReadCloser
-	err    error
+	flags  *flags
+	stdin  io.Writer
+	stdout io.Reader
+	cmd    *exec.Cmd
 	mu     sync.Mutex
 }
 
@@ -51,7 +50,7 @@ func (p *Prompt) readOutput(ctx context.Context) error {
 	go func() {
 		defer close(errC)
 
-		errC <- xerrors.Ignore(func() error {
+		errC <- func() error {
 			buf := new(bytes.Buffer)
 
 			for {
@@ -100,7 +99,7 @@ func (p *Prompt) readOutput(ctx context.Context) error {
 					appInfos[appInfo.Common.GameID] = *appInfo
 				}
 			}
-		}(), io.EOF)
+		}()
 	}()
 
 	select {
@@ -112,62 +111,70 @@ func (p *Prompt) readOutput(ctx context.Context) error {
 }
 
 func (p *Prompt) Run(ctx context.Context, commands ...Command) error {
+	if p.stdin == nil {
+		return fmt.Errorf("prompt is closed")
+	}
+
 	p.mu.Lock()
 	defer p.mu.Unlock()
 
 	for _, command := range commands {
-		if p.err != nil {
-			return p.err
+		if err := command.check(p.flags); err != nil {
+			return err
 		}
 
-		if err := command.Check(p.flags); err != nil {
-			return errors.Join(err, p.err)
-		}
-
-		args, err := command.Args()
+		args, err := command.args()
 		if err != nil {
-			return errors.Join(err, p.err)
+			return err
 		}
 
 		if _, err := fmt.Fprintln(p.stdin, xslice.Map(args, func(arg string, _ int) any {
 			return arg
 		})...); err != nil {
-			return errors.Join(err, p.err)
+			return err
 		}
 
 		if err = p.readOutput(ctx); err != nil {
-			return errors.Join(err, p.err)
+			return err
 		}
 
-		if err := command.Modify(p.flags); err != nil {
-			return errors.Join(err, p.err)
+		if err := command.modify(p.flags); err != nil {
+			return err
 		}
 	}
 
-	return p.err
+	return nil
 }
 
 func (p *Prompt) Close(ctx context.Context) error {
-	return errors.Join(
-		p.Run(ctx, Quit),
-		p.stdin.Close(),
-		p.stdout.Close(),
-		p.err,
-	)
+	if _, err := fmt.Fprintln(p.stdin, "quit"); err != nil {
+		return err
+	}
+
+	if err := p.cmd.Wait(); err != nil {
+		return err
+	}
+
+	p.cmd = nil
+	p.flags = nil
+	p.stdin = nil
+	p.stdout = nil
+
+	return nil
 }
 
-func (c Path) Run(ctx context.Context, commands ...Command) (*Prompt, error) {
+func (c Path) Start(ctx context.Context, commands ...Command) (*Prompt, error) {
 	var (
 		arg   = []string{}
-		flags = &Flags{}
+		flags = &flags{}
 	)
 
 	for _, command := range commands {
-		if err := command.Check(flags); err != nil {
+		if err := command.check(flags); err != nil {
 			return nil, err
 		}
 
-		args, err := command.Args()
+		args, err := command.args()
 		if err != nil {
 			return nil, err
 		}
@@ -178,7 +185,7 @@ func (c Path) Run(ctx context.Context, commands ...Command) (*Prompt, error) {
 
 		arg = append(arg, args...)
 
-		if err := command.Modify(flags); err != nil {
+		if err := command.modify(flags); err != nil {
 			return nil, err
 		}
 	}
@@ -197,20 +204,64 @@ func (c Path) Run(ctx context.Context, commands ...Command) (*Prompt, error) {
 	}
 
 	p := &Prompt{
-		flags:  flags,
 		stdin:  stdin,
 		stdout: stdout,
+		flags:  flags,
+		cmd:    cmd,
 	}
 
-	go func() {
-		if err = cmd.Run(); err != nil {
-			p.err = errors.Join(p.err, err)
+	if err := cmd.Start(); err != nil {
+		return nil, err
+	}
+
+	if err := p.readOutput(ctx); err != nil {
+		return nil, err
+	}
+
+	return p, nil
+}
+
+func (c Path) Run(ctx context.Context, commands ...Command) error {
+	var (
+		arg   = []string{}
+		flags = &flags{}
+	)
+
+	for _, command := range append(commands, quit) {
+		if err := command.check(flags); err != nil {
+			return err
 		}
-	}()
 
-	if err = p.readOutput(ctx); err != nil {
-		return nil, errors.Join(err, p.err)
+		args, err := command.args()
+		if err != nil {
+			return err
+		}
+
+		if len(args) > 0 {
+			args[0] = fmt.Sprintf("+%s", args[0])
+		}
+
+		arg = append(arg, args...)
+
+		if err := command.modify(flags); err != nil {
+			return err
+		}
 	}
 
-	return p, p.err
+	var (
+		//nolint:gosec
+		cmd    = exec.CommandContext(ctx, c.String(), arg...)
+		stdout = new(bytes.Buffer)
+	)
+	cmd.Stdout = stdout
+
+	if err := cmd.Run(); err != nil {
+		return err
+	}
+
+	if err := (&Prompt{stdout: stdout}).readOutput(ctx); xerrors.Ignore(err, io.EOF) != nil {
+		return err
+	}
+
+	return nil
 }
