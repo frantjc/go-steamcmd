@@ -32,14 +32,14 @@ func Download(ctx context.Context) (io.ReadCloser, error) {
 	return res.Body, nil
 }
 
-func New(ctx context.Context) (Command, error) {
+func New(ctx context.Context) (Path, error) {
 	entrypoint := "steamcmd.sh"
 	if bash, err := exec.LookPath("bash"); err != nil || bash == "" {
 		entrypoint = steamcmdBinaryPath
 	}
 
 	if bin, err := exec.LookPath(entrypoint); errors.Is(err, exec.ErrDot) || err == nil {
-		return Command(bin), nil
+		return Path(bin), nil
 	} else if _, err := os.Stat(filepath.Join(cache.Dir, entrypoint)); errors.Is(err, os.ErrNotExist) {
 		rc, err := Download(ctx)
 		if err != nil {
@@ -60,5 +60,5 @@ func New(ctx context.Context) (Command, error) {
 		return "", err
 	}
 
-	return Command(filepath.Join(cache.Dir, entrypoint)), nil
+	return Path(filepath.Join(cache.Dir, entrypoint)), nil
 }

@@ -1,29 +1,26 @@
 package steamcmd
 
 import (
-	"context"
 	"fmt"
 )
 
-type appInfoPrint int
+type AppInfoPrint int
 
-var _ cmd = appInfoPrint(0)
+var _ Command = AppInfoPrint(0)
 
-func (c appInfoPrint) String() string {
+func (c AppInfoPrint) String() string {
 	return fmt.Sprintf("%d", c)
 }
 
-var appInfos = map[int]AppInfo{}
-
-func (c appInfoPrint) check(flags *promptFlags) error {
-	if !flags.loggedIn {
+func (c AppInfoPrint) Check(flags *Flags) error {
+	if !flags.LoggedIn {
 		return fmt.Errorf("cannot app_info_print before login")
 	}
 
 	return nil
 }
 
-func (c appInfoPrint) args() ([]string, error) {
+func (c AppInfoPrint) Args() ([]string, error) {
 	if c == 0 {
 		return nil, fmt.Errorf("app_info_print requires app ID")
 	}
@@ -31,10 +28,6 @@ func (c appInfoPrint) args() ([]string, error) {
 	return []string{"app_info_print", c.String()}, nil
 }
 
-func (c appInfoPrint) readOutput(ctx context.Context, p *Prompt) error {
-	return readOutput(ctx, p, int(c))
-}
-
-func (c appInfoPrint) modify(_ *promptFlags) error {
+func (c AppInfoPrint) Modify(_ *Flags) error {
 	return nil
 }

@@ -1,30 +1,29 @@
 package steamcmd
 
 import (
-	"context"
 	"fmt"
 )
 
-type workshopDownloadItem struct {
+type WorkshopDownloadItem struct {
 	AppID           int
 	PublishedFileID int
 }
 
-var _ cmd = new(workshopDownloadItem)
+var _ Command = new(WorkshopDownloadItem)
 
-func (c *workshopDownloadItem) String() string {
+func (c *WorkshopDownloadItem) String() string {
 	return fmt.Sprintf("%d/%d", c.AppID, c.PublishedFileID)
 }
 
-func (*workshopDownloadItem) check(flags *promptFlags) error {
-	if !flags.loggedIn {
+func (*WorkshopDownloadItem) Check(flags *Flags) error {
+	if !flags.LoggedIn {
 		return fmt.Errorf("cannot workshop_download_item before login")
 	}
 
 	return nil
 }
 
-func (c *workshopDownloadItem) args() ([]string, error) {
+func (c *WorkshopDownloadItem) Args() ([]string, error) {
 	if c == nil || c.AppID == 0 || c.PublishedFileID == 0 {
 		return nil, fmt.Errorf("workshop_download_item requires app ID and published file ID")
 	}
@@ -34,10 +33,6 @@ func (c *workshopDownloadItem) args() ([]string, error) {
 	return args, nil
 }
 
-func (c *workshopDownloadItem) readOutput(ctx context.Context, p *Prompt) error {
-	return readOutput(ctx, p, 0)
-}
-
-func (c *workshopDownloadItem) modify(_ *promptFlags) error {
+func (c *WorkshopDownloadItem) Modify(_ *Flags) error {
 	return nil
 }

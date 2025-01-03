@@ -1,9 +1,19 @@
 package steamcmd
 
+var appInfos = map[int]AppInfo{}
+
+func GetAppInfo(appID int) (*AppInfo, bool) {
+	appInfo, ok := appInfos[appID]
+	if ok {
+		return &appInfo, true
+	}
+	return nil, false
+}
+
 type AppInfo struct {
 	Common AppInfoCommon `vdf:"common"`
 	Config AppInfoConfig `vdf:"config"`
-	Depots AppInfoDepots  `vdf:"depots"`
+	Depots AppInfoDepots `vdf:"depots"`
 }
 
 type AppInfoDepots struct {

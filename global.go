@@ -7,13 +7,13 @@ import (
 	"github.com/frantjc/go-steamcmd/internal/cache"
 )
 
-func Start(ctx context.Context) (*Prompt, error) {
+func NewPrompt(ctx context.Context, cmds ...Command) (*Prompt, error) {
 	c, err := New(ctx)
 	if err != nil {
 		return nil, err
 	}
 
-	return c.Start(ctx)
+	return c.Run(ctx, cmds...)
 }
 
 func Clean() error {
