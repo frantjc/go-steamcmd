@@ -1,7 +1,6 @@
 package steamcmd
 
 import (
-	"context"
 	"fmt"
 )
 
@@ -17,19 +16,19 @@ var (
 	PlatformTypeMacOS   PlatformType = "macos"
 )
 
-type forcePlatformType PlatformType
+type ForcePlatformType PlatformType
 
-var _ cmd = forcePlatformType("")
+var _ Command = ForcePlatformType("")
 
-func (c forcePlatformType) String() string {
+func (c ForcePlatformType) String() string {
 	return string(c)
 }
 
-func (c forcePlatformType) check(_ *promptFlags) error {
+func (c ForcePlatformType) check(_ *flags) error {
 	return nil
 }
 
-func (c forcePlatformType) args() ([]string, error) {
+func (c ForcePlatformType) args() ([]string, error) {
 	if c == "" {
 		return nil, fmt.Errorf("empty PlatformType")
 	}
@@ -37,10 +36,6 @@ func (c forcePlatformType) args() ([]string, error) {
 	return []string{"@sSteamCmdForcePlatformType", c.String()}, nil
 }
 
-func (c forcePlatformType) readOutput(ctx context.Context, p *Prompt) error {
-	return readOutput(ctx, p, 0)
-}
-
-func (c forcePlatformType) modify(_ *promptFlags) error {
+func (c ForcePlatformType) modify(_ *flags) error {
 	return nil
 }

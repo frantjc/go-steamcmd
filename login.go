@@ -1,22 +1,21 @@
 package steamcmd
 
 import (
-	"context"
 	"fmt"
 )
 
-type login struct {
+type Login struct {
 	Username       string
 	Password       string
 	SteamGuardCode string
 }
 
-func (c *login) check(_ *promptFlags) error {
+func (c Login) check(_ *flags) error {
 	return nil
 }
 
-func (c *login) args() ([]string, error) {
-	if c == nil || c.Username == "" || c.Username == "anonymous" {
+func (c Login) args() ([]string, error) {
+	if c.Username == "" || c.Username == "anonymous" {
 		return []string{"login", "anonymous"}, nil
 	}
 
@@ -38,16 +37,7 @@ func (c *login) args() ([]string, error) {
 	return args, nil
 }
 
-func (c *login) readOutput(ctx context.Context, p *Prompt) error {
-	return readOutput(ctx, p, 0)
-}
-
-func (*login) modify(flags *promptFlags) error {
-	if flags == nil {
-		flags = &promptFlags{}
-	}
-
-	flags.loggedIn = true
-
+func (Login) modify(flags *flags) error {
+	flags.LoggedIn = true
 	return nil
 }

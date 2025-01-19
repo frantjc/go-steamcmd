@@ -1,18 +1,21 @@
 package steamcmd
 
-import "context"
+var quit = &q{}
 
-var quit = &anyCommand{
-	checkFn: func(_ *promptFlags) error {
-		return nil
-	},
-	argsFn: func() ([]string, error) {
-		return []string{"quit"}, nil
-	},
-	readOutputFn: func(_ context.Context, _ *Prompt) error {
-		return nil
-	},
-	modifyFn: func(_ *promptFlags) error {
-		return nil
-	},
+type q struct{}
+
+func (q *q) String() string {
+	return "quit"
+}
+
+func (*q) check(_ *flags) error {
+	return nil
+}
+
+func (*q) args() ([]string, error) {
+	return []string{"quit"}, nil
+}
+
+func (*q) modify(_ *flags) error {
+	return nil
 }

@@ -1,5 +1,17 @@
 package steamcmd
 
+var appInfos = map[int]AppInfo{}
+
+// GetAppInfo returns the app info for the given app ID, assuming that
+// steamcmd has previously ran AppInfoPrint for the given app ID.
+func GetAppInfo(appID int) (*AppInfo, bool) {
+	appInfo, ok := appInfos[appID]
+	if ok {
+		return &appInfo, true
+	}
+	return nil, false
+}
+
 type AppInfo struct {
 	Common AppInfoCommon `vdf:"common"`
 	Config AppInfoConfig `vdf:"config"`
