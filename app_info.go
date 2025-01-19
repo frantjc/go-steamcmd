@@ -3,7 +3,7 @@ package steamcmd
 type AppInfo struct {
 	Common AppInfoCommon `vdf:"common"`
 	Config AppInfoConfig `vdf:"config"`
-	Depots AppInfoDepots  `vdf:"depots"`
+	Depots AppInfoDepots `vdf:"depots"`
 }
 
 type AppInfoDepots struct {
