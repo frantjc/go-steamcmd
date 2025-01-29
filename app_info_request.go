@@ -12,7 +12,7 @@ func (c AppInfoRequest) String() string {
 	return fmt.Sprintf("%d", c)
 }
 
-func (c AppInfoRequest) check(flags *flags) error {
+func (c AppInfoRequest) Check(flags *Flags) error {
 	if !flags.LoggedIn {
 		return fmt.Errorf("cannot app_info_request before login")
 	}
@@ -20,7 +20,7 @@ func (c AppInfoRequest) check(flags *flags) error {
 	return nil
 }
 
-func (c AppInfoRequest) args() ([]string, error) {
+func (c AppInfoRequest) Args() ([]string, error) {
 	if c == 0 {
 		return nil, fmt.Errorf("app_info_request requires app ID")
 	}
@@ -28,6 +28,6 @@ func (c AppInfoRequest) args() ([]string, error) {
 	return []string{"app_info_request", c.String()}, nil
 }
 
-func (c AppInfoRequest) modify(_ *flags) error {
+func (c AppInfoRequest) Modify(_ *Flags) error {
 	return nil
 }

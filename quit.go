@@ -8,14 +8,14 @@ func (q *q) String() string {
 	return "quit"
 }
 
-func (*q) check(_ *flags) error {
+func (*q) Check(_ *Flags) error {
 	return nil
 }
 
-func (*q) args() ([]string, error) {
+func (*q) Args() ([]string, error) {
 	return []string{"quit"}, nil
 }
 
-func (*q) modify(_ *flags) error {
+func (*q) Modify(_ *Flags) error {
 	return nil
 }

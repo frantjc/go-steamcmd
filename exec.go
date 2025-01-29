@@ -23,18 +23,18 @@ func (c Path) String() string {
 	return string(c)
 }
 
-type flags struct {
+type Flags struct {
 	LoggedIn bool
 }
 
 type Command interface {
-	check(*flags) error
-	args() ([]string, error)
-	modify(*flags) error
+	Check(*Flags) error
+	Args() ([]string, error)
+	Modify(*Flags) error
 }
 
 type Prompt struct {
-	flags  *flags
+	flags  *Flags
 	stdin  io.Writer
 	stdout io.Reader
 	cmd    *exec.Cmd
@@ -173,11 +173,11 @@ func (p *Prompt) Run(ctx context.Context, commands ...Command) error {
 	defer p.mu.Unlock()
 
 	for _, command := range commands {
-		if err := command.check(p.flags); err != nil {
+		if err := command.Check(p.flags); err != nil {
 			return err
 		}
 
-		args, err := command.args()
+		args, err := command.Args()
 		if err != nil {
 			return err
 		}
@@ -192,7 +192,7 @@ func (p *Prompt) Run(ctx context.Context, commands ...Command) error {
 			return err
 		}
 
-		if err := command.modify(p.flags); err != nil {
+		if err := command.Modify(p.flags); err != nil {
 			return err
 		}
 	}
@@ -217,18 +217,17 @@ func (p *Prompt) Close() error {
 	return nil
 }
 
-func (c Path) Start(ctx context.Context, commands ...Command) (*Prompt, error) {
+func Args(flags *Flags, commands ...Command) ([]string, error) {
 	var (
-		arg   = []string{}
-		flags = &flags{}
+		arg = []string{}
 	)
 
 	for _, command := range commands {
-		if err := command.check(flags); err != nil {
+		if err := command.Check(flags); err != nil {
 			return nil, err
 		}
 
-		args, err := command.args()
+		args, err := command.Args()
 		if err != nil {
 			return nil, err
 		}
@@ -239,9 +238,20 @@ func (c Path) Start(ctx context.Context, commands ...Command) (*Prompt, error) {
 
 		arg = append(arg, args...)
 
-		if err := command.modify(flags); err != nil {
+		if err := command.Modify(flags); err != nil {
 			return nil, err
 		}
+	}
+
+	return arg, nil
+}
+
+func (c Path) Start(ctx context.Context, commands ...Command) (*Prompt, error) {
+	flags := &Flags{}
+
+	arg, err := Args(flags, commands...)
+	if err != nil {
+		return nil, err
 	}
 
 	//nolint:gosec
@@ -276,30 +286,11 @@ func (c Path) Start(ctx context.Context, commands ...Command) (*Prompt, error) {
 }
 
 func (c Path) Run(ctx context.Context, commands ...Command) error {
-	var (
-		arg   = []string{}
-		flags = &flags{}
-	)
+	flags := &Flags{}
 
-	for _, command := range append(commands, quit) {
-		if err := command.check(flags); err != nil {
-			return err
-		}
-
-		args, err := command.args()
-		if err != nil {
-			return err
-		}
-
-		if len(args) > 0 {
-			args[0] = fmt.Sprintf("+%s", args[0])
-		}
-
-		arg = append(arg, args...)
-
-		if err := command.modify(flags); err != nil {
-			return err
-		}
+	arg, err := Args(flags, append(commands, quit)...)
+	if err != nil {
+		return err
 	}
 
 	var (

@@ -13,7 +13,7 @@ func (c ForceInstallDir) String() string {
 	return string(c)
 }
 
-func (ForceInstallDir) check(flags *flags) error {
+func (ForceInstallDir) Check(flags *Flags) error {
 	if flags.LoggedIn {
 		return fmt.Errorf("cannot force_install_dir after login")
 	}
@@ -21,7 +21,7 @@ func (ForceInstallDir) check(flags *flags) error {
 	return nil
 }
 
-func (c ForceInstallDir) args() ([]string, error) {
+func (c ForceInstallDir) Args() ([]string, error) {
 	if c == "" {
 		return nil, fmt.Errorf("empty force_install_dir")
 	}
@@ -34,6 +34,6 @@ func (c ForceInstallDir) args() ([]string, error) {
 	return []string{"force_install_dir", a}, nil
 }
 
-func (c ForceInstallDir) modify(_ *flags) error {
+func (c ForceInstallDir) Modify(_ *Flags) error {
 	return nil
 }

@@ -13,7 +13,7 @@ type AppUpdate struct {
 
 var _ Command = new(AppUpdate)
 
-func (AppUpdate) check(flags *flags) error {
+func (AppUpdate) Check(flags *Flags) error {
 	if !flags.LoggedIn {
 		return fmt.Errorf("cannot app_update before login")
 	}
@@ -21,7 +21,7 @@ func (AppUpdate) check(flags *flags) error {
 	return nil
 }
 
-func (c AppUpdate) args() ([]string, error) {
+func (c AppUpdate) Args() ([]string, error) {
 	if c.AppID == 0 {
 		return nil, fmt.Errorf("app_update requires app ID")
 	}
@@ -43,6 +43,6 @@ func (c AppUpdate) args() ([]string, error) {
 	return args, nil
 }
 
-func (c AppUpdate) modify(_ *flags) error {
+func (c AppUpdate) Modify(_ *Flags) error {
 	return nil
 }

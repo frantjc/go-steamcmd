@@ -15,7 +15,7 @@ func (c WorkshopDownloadItem) String() string {
 	return fmt.Sprintf("%d/%d", c.AppID, c.PublishedFileID)
 }
 
-func (WorkshopDownloadItem) check(flags *flags) error {
+func (WorkshopDownloadItem) Check(flags *Flags) error {
 	if !flags.LoggedIn {
 		return fmt.Errorf("cannot workshop_download_item before login")
 	}
@@ -23,7 +23,7 @@ func (WorkshopDownloadItem) check(flags *flags) error {
 	return nil
 }
 
-func (c WorkshopDownloadItem) args() ([]string, error) {
+func (c WorkshopDownloadItem) Args() ([]string, error) {
 	if c.AppID == 0 || c.PublishedFileID == 0 {
 		return nil, fmt.Errorf("workshop_download_item requires app ID and published file ID")
 	}
@@ -33,6 +33,6 @@ func (c WorkshopDownloadItem) args() ([]string, error) {
 	return args, nil
 }
 
-func (c WorkshopDownloadItem) modify(_ *flags) error {
+func (c WorkshopDownloadItem) Modify(_ *Flags) error {
 	return nil
 }
