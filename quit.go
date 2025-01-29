@@ -1,6 +1,6 @@
 package steamcmd
 
-var quit = &q{}
+var Quit = &q{}
 
 type q struct{}
 

@@ -222,6 +222,10 @@ func Args(flags *Flags, commands ...Command) ([]string, error) {
 		arg = []string{}
 	)
 
+	if flags == nil {
+		flags = &Flags{}
+	}
+
 	for _, command := range commands {
 		if err := command.Check(flags); err != nil {
 			return nil, err
@@ -288,7 +292,7 @@ func (c Path) Start(ctx context.Context, commands ...Command) (*Prompt, error) {
 func (c Path) Run(ctx context.Context, commands ...Command) error {
 	flags := &Flags{}
 
-	arg, err := Args(flags, append(commands, quit)...)
+	arg, err := Args(flags, append(commands, Quit)...)
 	if err != nil {
 		return err
 	}
