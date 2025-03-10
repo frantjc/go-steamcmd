@@ -30,10 +30,16 @@ type AppInfoDepotsBranch struct {
 }
 
 type AppInfoCommon struct {
-	Name   string `vdf:"name"`
-	Type   string `vdf:"type"`
-	OSList string `vdf:"oslist"`
-	GameID int    `vdf:"gameid"`
+	Name       string `vdf:"name"`
+	Type       string `vdf:"type"`
+	Parent     int    `vdf:"parent"`
+	OSList     string `vdf:"oslist"`
+	GameID     int    `vdf:"gameid"`
+	OSArch     string `vdf:"osarch"`
+	Icon       string `vdf:"icon"`
+	Logo       string `vdf:"logo"`
+	LogoSmall  string `vdf:"logo_small"`
+	ClientIcon string `vdf:"clienticon"`
 }
 
 type AppInfoConfig struct {
