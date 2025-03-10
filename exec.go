@@ -218,9 +218,7 @@ func (p *Prompt) Close() error {
 }
 
 func Args(flags *Flags, commands ...Command) ([]string, error) {
-	var (
-		arg = []string{}
-	)
+	arg := []string{}
 
 	if flags == nil {
 		flags = &Flags{}

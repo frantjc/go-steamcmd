@@ -17,7 +17,7 @@ linters:
     - prealloc
     - revive
     - unconvert
-    - tenv
+    - usetesting
     - testpackage
     - thelper
     - godot
