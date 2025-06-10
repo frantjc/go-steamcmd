@@ -14,7 +14,7 @@ import (
 
 	vdf "github.com/frantjc/go-encoding-vdf"
 	xerrors "github.com/frantjc/x/errors"
-	xslice "github.com/frantjc/x/slice"
+	xslices "github.com/frantjc/x/slices"
 )
 
 type Path string
@@ -182,7 +182,7 @@ func (p *Prompt) Run(ctx context.Context, commands ...Command) error {
 			return err
 		}
 
-		if _, err := fmt.Fprintln(p.stdin, xslice.Map(args, func(arg string, _ int) any {
+		if _, err := fmt.Fprintln(p.stdin, xslices.Map(args, func(arg string, _ int) any {
 			return arg
 		})...); err != nil {
 			return err
