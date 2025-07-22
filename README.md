@@ -2,12 +2,33 @@
 
 [Go](https://go.dev) module download and interact with Valve's Steam's [`steamcmd`](https://developer.valvesoftware.com/wiki/SteamCMD).
 
-## install
+## Install
 
 ```sh
 go get github.com/frantjc/go-steamcmd
 ```
 
-## use
+## Use
 
-See [examples](examples/).
+```go
+package main
+
+import (
+  "context"
+  "fmt"
+
+  "github.com/frantjc/go-steamcmd"
+)
+
+func main() {
+  if err := steamcmd.Run(context.Background(),
+    steamcmd.ForceInstallDir("./")
+    steamcmd.Login{},
+    steamcmd.AppUpdate{AppID: 896660},
+  ); err != nil {
+    panic(err)
+  }
+
+  fmt.Println("installed the Valheim Dedicated Server to current working directory")
+}
+```
