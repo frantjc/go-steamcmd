@@ -22,7 +22,7 @@ import (
 
 func main() {
   if err := steamcmd.Run(context.Background(),
-    steamcmd.ForceInstallDir("./")
+    steamcmd.ForceInstallDir("./"),
     steamcmd.Login{},
     steamcmd.AppUpdate{AppID: 896660},
   ); err != nil {
@@ -32,3 +32,5 @@ func main() {
   fmt.Println("installed the Valheim Dedicated Server to current working directory")
 }
 ```
+
+See more examples from the [tests](steamcmd_test.go).
