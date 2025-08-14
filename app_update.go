@@ -42,7 +42,6 @@ func (c AppUpdate) Args() ([]string, error) {
 		return nil, fmt.Errorf("app_update -betapassword is prohibited without -beta")
 	}
 
-
 	if c.Validate {
 		args = append(args, "validate")
 	}
