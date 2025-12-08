@@ -8,7 +8,7 @@ require (
 	github.com/adrg/xdg v0.5.3
 	github.com/frantjc/go-encoding-vdf v0.0.0-20240928221613-2ef12628042f
 	github.com/frantjc/x v0.0.0-20250610102853-b97418de6613
-	github.com/spf13/cobra v1.10.1
+	github.com/spf13/cobra v1.10.2
 )
 
 require (
