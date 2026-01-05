@@ -30,7 +30,7 @@ func (c ForcePlatformType) Check(_ *Flags) error {
 
 func (c ForcePlatformType) Args() ([]string, error) {
 	if c == "" {
-		return nil, fmt.Errorf("empty PlatformType")
+		return nil, fmt.Errorf("steamcmd: empty PlatformType")
 	}
 
 	return []string{"@sSteamCmdForcePlatformType", c.String()}, nil

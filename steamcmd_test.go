@@ -1,7 +1,6 @@
 package steamcmd_test
 
 import (
-	"context"
 	"testing"
 
 	"github.com/frantjc/go-steamcmd"
@@ -11,7 +10,7 @@ import (
 var AppIDs = []int{730, 1963720, 896660}
 
 func TestAppInfoPrint(t *testing.T) {
-	ctx := context.TODO()
+	ctx := t.Context()
 
 	for _, appID := range AppIDs {
 		if err := steamcmd.Run(ctx,
@@ -36,7 +35,7 @@ func TestAppInfoPrint(t *testing.T) {
 }
 
 func TestPrompt(t *testing.T) {
-	ctx := context.TODO()
+	ctx := t.Context()
 
 	for _, appID := range AppIDs {
 		prompt, err := steamcmd.Start(ctx,

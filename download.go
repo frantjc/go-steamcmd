@@ -21,12 +21,12 @@ import (
 func Download(ctx context.Context) (io.ReadCloser, error) {
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, DownloadURL.String(), nil)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("steamcmd: %w", err)
 	}
 
 	res, err := http.DefaultClient.Do(req)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("steamcmd: %w", err)
 	}
 
 	return res.Body, nil
@@ -57,7 +57,7 @@ func New(ctx context.Context) (Path, error) {
 			return "", fmt.Errorf("steamcmd: extracting download tarball: %w", err)
 		}
 	} else if err != nil {
-		return "", err
+		return "", fmt.Errorf("steamcmd: %w", err)
 	}
 
 	return Path(filepath.Join(cache.Dir, entrypoint)), nil

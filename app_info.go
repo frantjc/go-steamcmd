@@ -1,10 +1,17 @@
 package steamcmd
 
-var appInfos = map[int]AppInfo{}
+import "sync"
+
+var (
+	appInfos   = map[int]AppInfo{}
+	appInfosMu sync.Mutex
+)
 
 // GetAppInfo returns the app info for the given app ID, assuming that
 // steamcmd has previously ran AppInfoPrint for the given app ID.
 func GetAppInfo(appID int) (*AppInfo, bool) {
+	appInfosMu.Lock()
+	defer appInfosMu.Unlock()
 	appInfo, ok := appInfos[appID]
 	if ok {
 		return &appInfo, true

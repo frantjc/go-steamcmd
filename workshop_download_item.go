@@ -17,7 +17,7 @@ func (c WorkshopDownloadItem) String() string {
 
 func (WorkshopDownloadItem) Check(flags *Flags) error {
 	if !flags.LoggedIn {
-		return fmt.Errorf("cannot workshop_download_item before login")
+		return fmt.Errorf("steamcmd: cannot workshop_download_item before login")
 	}
 
 	return nil
@@ -25,7 +25,7 @@ func (WorkshopDownloadItem) Check(flags *Flags) error {
 
 func (c WorkshopDownloadItem) Args() ([]string, error) {
 	if c.AppID == 0 || c.PublishedFileID == 0 {
-		return nil, fmt.Errorf("workshop_download_item requires app ID and published file ID")
+		return nil, fmt.Errorf("steamcmd: workshop_download_item requires app ID and published file ID")
 	}
 
 	args := []string{"workshop_download_item", fmt.Sprint(c.AppID), fmt.Sprint(c.PublishedFileID)}

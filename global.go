@@ -2,6 +2,7 @@ package steamcmd
 
 import (
 	"context"
+	"fmt"
 	"os"
 
 	"github.com/frantjc/go-steamcmd/internal/cache"
@@ -26,5 +27,8 @@ func Run(ctx context.Context, cmds ...Command) error {
 }
 
 func Clean() error {
-	return os.RemoveAll(cache.Dir)
+	if err := os.RemoveAll(cache.Dir); err != nil {
+		return fmt.Errorf("steamcmd: %w", err)
+	}
+	return nil
 }

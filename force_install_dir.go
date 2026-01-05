@@ -15,7 +15,7 @@ func (c ForceInstallDir) String() string {
 
 func (ForceInstallDir) Check(flags *Flags) error {
 	if flags.LoggedIn {
-		return fmt.Errorf("cannot force_install_dir after login")
+		return fmt.Errorf("steamcmd: cannot force_install_dir after login")
 	}
 
 	return nil
@@ -23,7 +23,7 @@ func (ForceInstallDir) Check(flags *Flags) error {
 
 func (c ForceInstallDir) Args() ([]string, error) {
 	if c == "" {
-		return nil, fmt.Errorf("empty force_install_dir")
+		return nil, fmt.Errorf("steamcmd: empty force_install_dir")
 	}
 
 	a, err := filepath.Abs(c.String())

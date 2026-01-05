@@ -14,7 +14,7 @@ func (e *CommandError) Error() string {
 	}
 	msg := e.Msg
 	if e.Err != nil {
-		msg = fmt.Sprintf("%s: %s", msg, e.Err.Error())
+		msg = fmt.Sprintf("steamcmd: %s: %s", msg, e.Err.Error())
 	}
 	return msg
 }

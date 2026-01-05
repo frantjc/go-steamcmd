@@ -3,6 +3,7 @@ package steamcmd
 import (
 	"bytes"
 	"context"
+	"errors"
 	"fmt"
 	"io"
 	"os/exec"
@@ -115,13 +116,14 @@ func (p *Prompt) readOutput(ctx context.Context) error {
 					if runtime.GOOS == "linux" && p.stdin != nil {
 						cctx, cancel := context.WithCancel(ctx)
 						defer cancel()
+						timer := time.NewTimer(time.Second)
 
 						go func() {
 							for {
 								select {
 								case <-cctx.Done():
 									return
-								case <-time.NewTimer(time.Second).C:
+								case <-timer.C:
 									_, _ = fmt.Fprintln(p.stdin)
 								}
 							}
@@ -141,7 +143,9 @@ func (p *Prompt) readOutput(ctx context.Context) error {
 						}
 					}
 
+					appInfosMu.Lock()
 					appInfos[appInfo.Common.GameID] = *appInfo
+					appInfosMu.Unlock()
 
 					// If this is non-nil, then we are running as a prompt
 					// and need to exit so that the next command can get ran.
@@ -174,26 +178,29 @@ func (p *Prompt) Run(ctx context.Context, commands ...Command) error {
 
 	for _, command := range commands {
 		if err := command.Check(p.flags); err != nil {
-			return err
+			return fmt.Errorf("steamcmd: %w", err)
 		}
 
 		args, err := command.Args()
 		if err != nil {
-			return err
+			return fmt.Errorf("steamcmd: %w", err)
 		}
 
 		if _, err := fmt.Fprintln(p.stdin, xslices.Map(args, func(arg string, _ int) any {
 			return arg
 		})...); err != nil {
-			return err
+			return fmt.Errorf("steamcmd: %w", err)
 		}
 
 		if err = p.readOutput(ctx); err != nil {
-			return err
+			if cerr := (&CommandError{}); errors.As(err, &cerr) {
+				return cerr
+			}
+			return fmt.Errorf("steamcmd: %w", err)
 		}
 
 		if err := command.Modify(p.flags); err != nil {
-			return err
+			return fmt.Errorf("steamcmd: %w", err)
 		}
 	}
 
@@ -202,11 +209,11 @@ func (p *Prompt) Run(ctx context.Context, commands ...Command) error {
 
 func (p *Prompt) Close() error {
 	if _, err := fmt.Fprintln(p.stdin, "quit"); err != nil {
-		return err
+		return fmt.Errorf("steamcmd: %w", err)
 	}
 
 	if err := p.cmd.Wait(); err != nil {
-		return err
+		return fmt.Errorf("steamcmd: %w", err)
 	}
 
 	p.cmd = nil
@@ -261,12 +268,12 @@ func (c Path) Start(ctx context.Context, commands ...Command) (*Prompt, error) {
 
 	stdin, err := cmd.StdinPipe()
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("steamcmd: %w", err)
 	}
 
 	stdout, err := cmd.StdoutPipe()
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("steamcmd: %w", err)
 	}
 
 	p := &Prompt{
@@ -277,11 +284,14 @@ func (c Path) Start(ctx context.Context, commands ...Command) (*Prompt, error) {
 	}
 
 	if err := cmd.Start(); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("steamcmd: %w", err)
 	}
 
 	if err := p.readOutput(ctx); err != nil {
-		return nil, err
+		if cerr := (&CommandError{}); errors.As(err, &cerr) {
+			return nil, cerr
+		}
+		return nil, fmt.Errorf("steamcmd: %w", err)
 	}
 
 	return p, nil
@@ -303,11 +313,14 @@ func (c Path) Run(ctx context.Context, commands ...Command) error {
 	cmd.Stdout = stdout
 
 	if err := cmd.Run(); err != nil {
-		return err
+		return fmt.Errorf("steamcmd: %w", err)
 	}
 
-	if err := (&Prompt{stdout: stdout}).readOutput(ctx); xerrors.Ignore(err, io.EOF) != nil {
-		return err
+	if err := xerrors.Ignore((&Prompt{stdout: stdout}).readOutput(ctx), io.EOF); err != nil {
+		if cerr := (&CommandError{}); errors.As(err, &cerr) {
+			return cerr
+		}
+		return fmt.Errorf("steamcmd: %w", err)
 	}
 
 	return nil

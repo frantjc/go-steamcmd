@@ -29,9 +29,9 @@ func (c Login) Args() ([]string, error) {
 			args = append(args, c.SteamGuardCode)
 		}
 	case c.SteamGuardCode != "":
-		return nil, fmt.Errorf("specified Steam Guard code without password")
+		return nil, fmt.Errorf("steamcmd: specified Steam Guard code without password")
 	default:
-		return nil, fmt.Errorf("non-anonymous username given without a password or Steam Guard code")
+		return nil, fmt.Errorf("steamcmd: non-anonymous username given without a password or Steam Guard code")
 	}
 
 	return args, nil
