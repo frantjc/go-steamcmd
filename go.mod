@@ -1,6 +1,6 @@
 module github.com/frantjc/go-steamcmd
 
-go 1.25.4
+go 1.26.3
 
 require (
 	github.com/adrg/xdg v0.5.3
